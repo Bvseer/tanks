@@ -48,6 +48,10 @@ function view(d, me, since) {                // what a player's game is told abo
 }
 async function note(env, uid, text, id) { if (!uid) return; await tg(env, 'sendMessage', { chat_id: uid, text: text, reply_markup: { inline_keyboard: [[{ text: '▶ Открыть дуэль', url: link(env, id) }]] } }); }
 
+function dealOrder(seed, n, free) {          // the same chance order as the game works out: see dealOrder in index.html
+  let z = (seed ^ Math.imul(n + 1, 0x85EBCA6B)) | 0; const r = () => { z = z + 0x6D2B79F5 | 0; let t = Math.imul(z ^ z >>> 15, 1 | z); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0)/4294967296; };
+  const l = free.slice(); for (let i = l.length - 1; i > 0; i--) { const j = Math.floor(r()*(i + 1)), t = l[i]; l[i] = l[j]; l[j] = t; } return l;
+}
 async function open(env, me, t) {             // a challenge: open until somebody else comes in by its link
   let id = ''; const abc = 'abcdefghjkmnpqrstuvwxyz23456789'; const rnd = crypto.getRandomValues(new Uint8Array(8)); for (let i = 0; i < 8; i++) id += abc[rnd[i] % abc.length];
   const seed = crypto.getRandomValues(new Uint32Array(1))[0] | 0;
@@ -84,6 +88,14 @@ async function duel(env, path, q) {
     if ((q.n | 0) !== n) return json(Object.assign(view(d, me.id, q.n), { ok: false, err: 'stale' }));          // the game was behind: here is what it missed
     if (turnOf(n) !== side) return json({ ok: false, err: 'turn' });
     const snap = typeof q.snap === 'string' && q.snap.length <= SNAP_MAX ? q.snap : null; let rec, st = d.st, sa = d.sa, sb = d.sb;
+    if (n < POOL && mv.auto) {               // the rest of the weapons dealt by chance, in an order the server works out itself
+      if (!snap) return json({ ok: false, err: 'snap' }); const free = []; for (let i = 0; i < POOL; i++) if (!moves.some((m) => m.i === i)) free.push(i);
+      for (const i of dealOrder(d.seed, n, free)) moves.push({ t: 'p', i: i, r: 1 });
+      const up = await env.DB.prepare("UPDATE duel SET moves = ?1, n = ?2, st = 'play', at = ?3, psnap = snap, snap = ?4 WHERE id = ?5 AND n = ?6").bind(JSON.stringify(moves), POOL, t, snap, id, n).run();
+      if (!(up && up.meta && up.meta.changes)) return json({ ok: false, err: 'stale' });
+      if (t - ((side ? d.pa : d.pb) | 0) > 45) await note(env, side ? d.a : d.b, '🎲 ' + me.name + ' раздал оружие случайно. ' + (turnOf(POOL) === side ? 'Ждём его выстрела.' : 'Твой выстрел.'), id);
+      return json({ ok: true, n: POOL, st: 'play' });
+    }
     if (n < POOL) { const i = mv.i | 0; if (!(i >= 0 && i < POOL) || moves.some((m) => m.i === i)) return json({ ok: false, err: 'pick' }); rec = { t: 'p', i: i }; if (n + 1 === POOL) { if (!snap) return json({ ok: false, err: 'snap' }); st = 'play'; } }
     else { const wi = mv.wi | 0, ang = +mv.ang, pow = +mv.pow, x = mv.x | 0; if (!(wi >= 0 && wi < PICKS) || !(ang >= 0 && ang <= 180) || !(pow >= 5 && pow <= 100) || !(x >= 0 && x <= 4000) || !snap) return json({ ok: false, err: 'shot' });
       rec = { t: 's', wi: wi, ang: Math.round(ang*100)/100, pow: Math.round(pow*100)/100, x: x }; const sc = Array.isArray(q.score) ? q.score : []; sa = Math.max(0, Math.min(99999, sc[0] | 0)); sb = Math.max(0, Math.min(99999, sc[1] | 0)); if (n + 1 === POOL*2) st = 'over'; }
