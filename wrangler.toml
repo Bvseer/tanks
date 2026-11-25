@@ -1,0 +1,12 @@
+# The duel server and the bot. Deployed by .github/workflows/deploy.yml on every push that touches server/.
+# Secrets BOT_TOKEN and HOOK_SECRET live in Cloudflare and are kept as they are.
+name = "tanks"
+main = "server/worker.js"
+compatibility_date = "2025-01-01"
+workers_dev = true
+keep_vars = true
+
+[[d1_databases]]
+binding = "DB"
+database_name = "tanks"
+database_id = "e4432069-3ad3-4f5c-b722-109e6f684864"
