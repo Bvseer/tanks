@@ -17,6 +17,7 @@ const now = () => Math.floor(Date.now()/1000);
 const botName = (env) => env.BOT_NAME || 'tankDuelBot';
 const link = (env, id) => 'https://t.me/' + botName(env) + '?startapp=g_' + id;
 
+const cleanName = (u) => String(u.first_name || u.username || 'Игрок').replace(/[\u0000-\u001f\u007f\u200b-\u200f\u2028-\u202e<>]/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 16) || 'Игрок';
 // Who is asking: Telegram signs the data it hands to a Mini App with the bot's token, so a name cannot be made up.
 async function whoIs(init, env) {
   if (!init || typeof init !== 'string' || init.length > 4096 || !env.BOT_TOKEN) return null;
@@ -27,8 +28,7 @@ async function whoIs(init, env) {
   const at = parseInt(p.get('auth_date') || '0', 10); if (!(at > 0) || Date.now()/1000 - at > FRESH) return null;
   let u = null; try { u = JSON.parse(p.get('user') || 'null'); } catch (e) {}
   if (!u || !Number.isSafeInteger(u.id)) return null;
-  const name = String(u.first_name || u.username || 'Игрок').replace(/[\u0000-\u001f\u007f\u200b-\u200f\u2028-\u202e<>]/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 16) || 'Игрок';
-  return { id: u.id, name: name, uz: String(u.language_code || '').toLowerCase().indexOf('uz') === 0 };
+  return { id: u.id, name: cleanName(u), uz: String(u.language_code || '').toLowerCase().indexOf('uz') === 0 };
 }
 async function tables(env) {
   await env.DB.batch([
@@ -48,16 +48,17 @@ function view(d, me, since) {                // what a player's game is told abo
 }
 async function note(env, uid, text, id) { if (!uid) return; await tg(env, 'sendMessage', { chat_id: uid, text: text, reply_markup: { inline_keyboard: [[{ text: '▶ Открыть дуэль', url: link(env, id) }]] } }); }
 
+async function open(env, me, t) {             // a challenge: open until somebody else comes in by its link
+  let id = ''; const abc = 'abcdefghjkmnpqrstuvwxyz23456789'; const rnd = crypto.getRandomValues(new Uint8Array(8)); for (let i = 0; i < 8; i++) id += abc[rnd[i] % abc.length];
+  const seed = crypto.getRandomValues(new Uint32Array(1))[0] | 0;
+  await withTables(env, () => env.DB.prepare("INSERT INTO duel (id, a, an, seed, st, at, made) VALUES (?1, ?2, ?3, ?4, 'open', ?5, ?5)").bind(id, me.id, me.name, seed, t).run());
+  await env.DB.prepare('INSERT INTO tusr (uid, name, at) VALUES (?1, ?2, ?3) ON CONFLICT (uid) DO UPDATE SET name = excluded.name, at = excluded.at').bind(me.id, me.name, t).run();
+  return id;
+}
 async function duel(env, path, q) {
   const me = await whoIs(q.init, env); if (!me) return json({ ok: false, err: 'auth' }, 401);
   const t = now();
-  if (path === '/new') {                     // a challenge: open until somebody else comes in by its link
-    let id = ''; const abc = 'abcdefghjkmnpqrstuvwxyz23456789'; const rnd = crypto.getRandomValues(new Uint8Array(8)); for (let i = 0; i < 8; i++) id += abc[rnd[i] % abc.length];
-    const seed = crypto.getRandomValues(new Uint32Array(1))[0] | 0;
-    await withTables(env, () => env.DB.prepare("INSERT INTO duel (id, a, an, seed, st, at, made) VALUES (?1, ?2, ?3, ?4, 'open', ?5, ?5)").bind(id, me.id, me.name, seed, t).run());
-    await env.DB.prepare('INSERT INTO tusr (uid, name, at) VALUES (?1, ?2, ?3) ON CONFLICT (uid) DO UPDATE SET name = excluded.name, at = excluded.at').bind(me.id, me.name, t).run();
-    return json({ ok: true, id: id, link: link(env, id) });
-  }
+  if (path === '/new') { const id = await open(env, me, t); return json({ ok: true, id: id, link: link(env, id) }); }
   if (path === '/mine') {                    // the duels a player is in, the latest first
     const r = await withTables(env, () => env.DB.prepare("SELECT id, a, b, an, bn, st, n, sa, sb, at FROM duel WHERE (a = ?1 OR b = ?1) AND (st != 'over' OR at > ?2) AND (st != 'open' OR made > ?3) ORDER BY at DESC LIMIT 12").bind(me.id, t - 2*86400, t - OPEN_FOR).all());
     return json({ ok: true, list: (r.results || []).map((d) => { const side = d.a === me.id ? 0 : 1; return { id: d.id, st: d.st, foe: side ? d.an : (d.bn || ''), mine: d.st !== 'open' && d.st !== 'over' && turnOf(d.n) === side, score: side ? [d.sb, d.sa] : [d.sa, d.sb], at: d.at }; }) });
@@ -110,13 +111,21 @@ async function telegram(env, request) {
   if (!env.HOOK_SECRET || request.headers.get('X-Telegram-Bot-Api-Secret-Token') !== env.HOOK_SECRET) return new Response('no', { status: 403 });
   let u = null; try { u = await request.json(); } catch (e) {} const m = u && u.message; if (!m || !m.chat || typeof m.text !== 'string') return new Response('ok');
   const cmd = m.text.trim().split(/[\s@]/)[0].toLowerCase(), url = 'https://t.me/' + botName(env) + '?startapp=home';
+  if (cmd === '/duel' && m.from && Number.isSafeInteger(m.from.id) && !m.from.is_bot) {
+    // a challenge thrown into the chat: whoever presses the button first becomes the opponent. Asked again within ten minutes, the same challenge is shown
+    const me = { id: m.from.id, name: cleanName(m.from) }, t = now();
+    const old = await withTables(env, () => env.DB.prepare("SELECT id FROM duel WHERE a = ?1 AND st = 'open' AND made > ?2 ORDER BY made DESC LIMIT 1").bind(me.id, t - 600).first());
+    const id = old ? old.id : await open(env, me, t), uz = String(m.from.language_code || '').toLowerCase().indexOf('uz') === 0;
+    await tg(env, 'sendMessage', { chat_id: m.chat.id, text: uz ? '⚔️ ' + me.name + ' tank dueliga chaqirmoqda!\nQurol tanlang va navbat bilan o‘q uzing. Kim qabul qiladi?' : '⚔️ ' + me.name + ' вызывает на танковую дуэль!\nРазбираете оружие и стреляете по очереди. Кто примет?', reply_markup: { inline_keyboard: [[{ text: uz ? '🎯 Qabul qilish' : '🎯 Принять вызов', url: link(env, id) }]] } });
+    return new Response('ok');
+  }
   if (cmd === '/start' || cmd === '/play' || cmd === '/duel' || cmd === '/help') await tg(env, 'sendMessage', { chat_id: m.chat.id, text: '💥 Залп — танковая дуэль.\n\nРазбираете оружие по очереди, потом стреляете: угол, сила, огонь. Земля разрушается, у кого больше очков — тот победил.\n\nБрось вызов другу или сыграй против компьютера.', reply_markup: { inline_keyboard: [[{ text: '🎯 Играть', url: url }]] } });
   return new Response('ok');
 }
 async function setup(env, origin) {
   await tables(env);
   const hook = await tg(env, 'setWebhook', { url: origin + '/tg', secret_token: env.HOOK_SECRET, allowed_updates: ['message'] });
-  const cmds = await tg(env, 'setMyCommands', { commands: [{ command: 'play', description: 'Играть' }, { command: 'help', description: 'Как играть' }] });
+  const cmds = await tg(env, 'setMyCommands', { commands: [{ command: 'duel', description: 'Вызвать на дуэль' }, { command: 'play', description: 'Играть' }, { command: 'help', description: 'Как играть' }] });
   return { webhook: hook && hook.ok, commands: cmds && cmds.ok };
 }
 

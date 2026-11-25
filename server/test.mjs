@@ -33,5 +33,9 @@ o.stats = JSON.stringify(db.exec('SELECT uid, games, wins, pts FROM tusr ORDER B
 const g2 = (await call('/new', { init: B })).j; o.mine = JSON.stringify((await call('/mine', { init: B })).j.list.map((d) => d.st + ':' + d.foe + ':' + d.mine + ':' + d.score));
 sent.length = 0; { const r = (await call('/share', { init: B, id: g2.id, lang: 'uz' })).j; o.share = r.ok + ' ' + r.kind + ' ' + r.id + ' | ' + sent.join(); }
 o.tg = (await call('/tg', { message: { chat: { id: 5 }, text: '/start' } })).s + ' ' + (await call('/tg', { message: { chat: { id: 5 }, text: '/start' } }, { 'X-Telegram-Bot-Api-Secret-Token': 'hooksecret' })).s; o.setup = JSON.stringify((await call('/setup?key=hooksecret')).j) + ' bad ' + (await call('/setup?key=x')).s + ' root ' + JSON.stringify((await call('/')).j);
+{ sent.length = 0; const H = { 'X-Telegram-Bot-Api-Secret-Token': 'hooksecret' }, msg = (text, from) => ({ message: { chat: { id: -100500 }, from, text } });
+  await call('/tg', msg('/duel@tankDuelBot', { id: 44, first_name: 'Sardor<b>' }), H); const n1 = db.exec("SELECT count(*) FROM duel WHERE a = 44")[0].values[0][0]; await call('/tg', msg('/duel', { id: 44, first_name: 'Sardor' }), H); const n2 = db.exec("SELECT count(*) FROM duel WHERE a = 44")[0].values[0][0];
+  const gid = db.exec("SELECT id, an FROM duel WHERE a = 44")[0].values[0]; const jj = (await call('/join', { init: A, id: gid[0] })).j; await call('/tg', msg('/duel', { id: 44, first_name: 'Sardor' }), H); const n3 = db.exec("SELECT count(*) FROM duel WHERE a = 44")[0].values[0][0];
+  o.groupDuel = 'rows ' + n1 + ',' + n2 + ',' + n3 + ' name ' + gid[1] + ' joined ' + jj.st + ' me ' + jj.me + ' | ' + sent.join(' ; '); }
 db.run('DROP TABLE duel'); db.run('DROP TABLE tusr'); o.fresh = (await call('/new', { init: A })).j.ok;
 console.log(JSON.stringify(o, null, 1));
