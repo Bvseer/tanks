@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <title>Залп</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
   :root { --bg: #0b1020; --panel: #141b36; --line: rgba(255,255,255,.14); --ink: #eef3ff; --mute: #9aa6c8; --acc: #ffd23f; --p0: #ffd23f; --p1: #5ee0d0; }
   html, body { margin: 0; height: 100%; overflow: hidden; background: var(--bg); color: var(--ink);
@@ -62,6 +63,11 @@
   .chips { display: flex; gap: 6px; } .chip { padding: 7px 14px; border-radius: 999px; border: 1px solid var(--line); background: rgba(255,255,255,.06); font-size: 13px; font-weight: 700; }
   .chip.on { background: var(--acc); color: #1a1403; border-color: transparent; }
   .soon { font-size: 12px; color: var(--mute); }
+  .main.alt { background: linear-gradient(180deg, #8ff0e2, #2fb8a6); box-shadow: 0 3px 0 #14695e; color: #04201c; }
+  .pair { display: flex; gap: 8px; min-width: 270px; } .pair .ghost { min-width: 0; flex: 1; padding: 10px 4px; font-size: 13px; white-space: nowrap; }
+  @media (max-height: 380px) { #home .sub { display: none; } #home { gap: 8px; } }
+  #mine { display: flex; gap: 6px; max-width: 100%; overflow-x: auto; touch-action: pan-x; padding: 2px; } #mine:empty { display: none; } #mine .chip { flex: none; white-space: nowrap; }
+  #wLink { -webkit-user-select: text; user-select: text; word-break: break-all; text-align: center; max-width: 320px; } #wait .res { font-size: 30px; font-weight: 900; color: var(--acc); }
   #draft { justify-content: flex-start; gap: 10px; }
   #dhead { width: 100%; max-width: 980px; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
   #dhead .who { font-size: 18px; font-weight: 800; } #dhead .cnt { font-size: 13px; color: var(--mute); }
@@ -88,7 +94,7 @@
   body.narrow #fire { min-width: 78px; font-size: 16px; } body.narrow #wbtn { min-width: 96px; padding: 4px 7px; } body.narrow #wbtn small { display: none; } body.narrow #fuel { width: 30px; }
   body.tiny #bar { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-areas: "w w f" "m a p"; } body.tiny .grp { min-width: 0; padding: 3px; gap: 2px; } body.tiny .sq { width: 32px; height: 34px; flex: none; } body.tiny .grp .val { min-width: 0; flex: 1; font-size: 16px; } body.tiny #fire { min-width: 0; } body.tiny #wbtn { min-width: 0; } body.tiny #fuel { flex: 1; min-width: 12px; width: auto; } body.tiny .grp > div { flex: 1; min-width: 0; } body.tiny #wbtn { grid-area: w; } body.tiny #fire { grid-area: f; min-height: 42px; } body.tiny .grp { justify-content: space-between; }
   body.tiny #wbtn small { display: block; } body.tiny .side { min-width: 78px; padding: 4px 7px 6px; } body.tiny .side .sc { font-size: 26px; } body.tiny .side .dots i { width: 5px; height: 5px; } body.tiny #wind { padding: 3px 7px; font-size: 12px; }
-  body.tiny h1 { font-size: 46px; } body.tiny .main, body.tiny .ghost { min-width: 0; width: 100%; max-width: 300px; box-sizing: border-box; } body.tiny .sub { text-align: center; }
+  body.tiny h1 { font-size: 46px; } body.tiny .main, body.tiny .ghost { min-width: 0; width: 100%; max-width: 300px; box-sizing: border-box; } body.tiny .pair { min-width: 0; width: 100%; max-width: 300px; } body.tiny .sub { text-align: center; }
   body.stack #dbody { flex-direction: column; gap: 6px; } body.stack .dcol { width: auto; flex-direction: row; flex-wrap: wrap; align-items: center; gap: 3px; padding: 5px 8px; overflow: visible; }
   body.stack .dcol h3 { margin: 0 6px 0 0; font-size: 13px; } body.stack .slot { min-height: 0; width: 24px; height: 24px; padding: 0; justify-content: center; } body.stack .slot span { display: none; } body.stack #pbox { height: 34%; }
   body.stack #dhead .cnt { font-size: 12px; } body.stack #dauto { padding: 8px 12px; font-size: 13px; }
@@ -123,9 +129,9 @@
   <h1>ЗАЛП</h1><div class="sub">Артиллерийская дуэль: выбери оружие и перестреляй соперника</div>
   <button class="main" id="goAi">Против компьютера</button>
   <div class="chips" id="diff"><button class="chip" data-d="0">Лёгкий</button><button class="chip on" data-d="1">Средний</button><button class="chip" data-d="2">Сильный</button></div>
-  <button class="ghost" id="goHot">Вдвоём на одном экране</button>
-  <button class="ghost" id="goHelp">Как играть</button>
-  <div class="soon">Дуэли в чате Telegram — следующим шагом · прототип 1</div>
+  <button class="main alt" id="goNet">Дуэль с другом</button>
+  <div class="pair"><button class="ghost" id="goHot">Вдвоём на экране</button><button class="ghost" id="goHelp">Как играть</button></div>
+  <div id="mine"></div>
 </div>
 <div class="screen hidden" id="draft">
   <div id="dhead"><div><div class="who" id="dwho"></div><div class="cnt" id="dcnt"></div></div><button class="ghost" id="dauto" style="min-width:0">Раздать случайно</button></div>
@@ -139,6 +145,13 @@
     <p><b>Клавиши</b>: ← → угол, ↑ ↓ сила, A D отъехать, Q E оружие, пробел — огонь.</p>
   </div>
   <button class="main" id="helpOk">Понятно</button>
+</div>
+<div class="screen hidden" id="wait">
+  <div class="res">Вызов готов</div>
+  <div class="sub" style="margin-top:0;text-align:center">Отправь его другу. Как только он откроет ссылку — начнёте разбирать оружие.</div>
+  <button class="main" id="wSend">Отправить вызов</button><button class="ghost" id="wCopy">Скопировать ссылку</button>
+  <div class="soon" id="wLink"></div><div class="soon" id="wState">Ждём соперника…</div>
+  <button class="ghost" id="wHome">В меню</button>
 </div>
 <div class="screen hidden" id="over">
   <div class="res" id="ores"></div>
@@ -233,7 +246,14 @@ function carve(cx, cy, r) {                 // a round bite out of the hill: wha
 const muzzle = (p) => { const a = p.ang*Math.PI/180; return { x: p.x + Math.cos(a)*30, y: p.y + 17 + Math.sin(a)*30 }; };
 function spawn(kind, owner, x, y, a, v, extra) { const p = Object.assign({ kind: kind, owner: owner, x: x, y: y, vx: Math.cos(a)*v, vy: Math.sin(a)*v, age: 0, n: 0 }, extra || {}); G.projs.push(p); return p; }
 function fire() {
-  if (G.phase !== 'aim') return; const P = cur(), k = P.weapons[P.sel]; if (!k) return; const a = P.ang*Math.PI/180, m = muzzle(P), v = P.pow*SPD;
+  if (G.phase !== 'aim') return; const P = cur(), k = P.weapons[P.sel]; if (!k) return;
+  if (G.mode === 'net') {
+    // a shot in a duel: the aim is rounded the way the server keeps it, and both games draw the same numbers for the spread
+    if (!NET.replay) { if (G.turn !== NET.me || NET.busy) return; P.ang = Math.round(P.ang*100)/100; P.pow = Math.round(P.pow*100)/100; NET.shot = { wi: P.sel, ang: P.ang, pow: P.pow, x: P.x }; }
+    SEED = (NET.seed ^ Math.imul(NET.n + 1, 0x9E3779B1)) | 0; G.fireTick = 0;
+    // both games start the shot from the same footing: every tank standing on the ground
+    for (const t of G.players) { t.y = ground[t.x]; t.vy = 0; }
+  }
   G.phase = 'fly'; G.rest = 0; closeList(); G.shot = { who: P, a: P.score, b: other(P).score }; P.shots++; P.recoil = 1; P.weapons.splice(P.sel, 1); P.sel = clamp(P.sel, 0, Math.max(0, P.weapons.length - 1)); P.last = { ang: P.ang, pow: P.pow };
   launch(P, k); ui();
 }
@@ -322,13 +342,14 @@ function stepWorld() {
   if (G.phase === 'fly') { const busy = G.projs.length || G.fires.length || G.events.length || G.players.some((t) => t.y > ground[t.x] + 0.5); if (busy) G.rest = 0; else { G.rest += STEP; if (G.rest > 0.75) endTurn(); } }
 }
 function endTurn() {
-  let said = ''; if (G.shot) { const P = G.shot.who, gain = P.score - G.shot.a, self = other(P).score - G.shot.b; if (gain > 0) { P.hits++; P.best = Math.max(P.best, gain); } said = gain > 0 ? 'Попадание +' + gain : self > 0 ? 'По своим! +' + self + ' сопернику' : 'Мимо'; if (gain > 0 && self > 0) said += ', по своим +' + self; G.shot = null; }
+  let said = ''; if (G.shot) { const P = G.shot.who, gain = P.score - G.shot.a, self = other(P).score - G.shot.b; if (gain > 0) { P.hits++; P.best = Math.max(P.best, gain); } said = gain > 0 ? 'Попадание +' + gain : self > 0 ? 'По своим! +' + self + ' сопернику' : 'Мимо'; if (gain > 0 && self > 0) said += ', по своим +' + self; G.netGain = gain; G.netSelf = self; G.shot = null; }
+  if (G.mode === 'net') { netTurnEnd(said); return; }
   const done = G.players.every((p) => !p.weapons.length);
   if (done) { G.phase = 'over'; setTimeout(showOver, G.fast ? 0 : 700); return; }
   G.turn = 1 - G.turn; if (!cur().weapons.length) G.turn = 1 - G.turn;
   // the wind drifts a little from turn to turn: an aim that hit is still close on the next shot
   G.wind = WIND_ON ? clamp(Math.round(G.wind + rr(-6, 6)), -30, 30) : 0; G.phase = 'aim'; G.aiT = 0; ui();
-  if (!G.fast) toast((said ? said + ' · ' : '') + (cur().ai ? 'ход компьютера' : G.mode === 'hot' ? 'ход: ' + cur().name : 'твой ход'), 2000);
+  if (!G.fast) toast((said ? said + ' · ' : '') + turnTxt(), 2000);
 }
 
 // ---- the computer player --------------------------------------------------
@@ -373,32 +394,40 @@ function demoTick(dt) {
 function demoPick(i) { const c = G.pool[i]; G.dsel = c && c.by < 0 ? i : -1; if (G.dsel < 0) G.dsel = G.pool.findIndex((q) => q.by < 0); const k = G.dsel >= 0 ? G.pool[G.dsel].k : ''; if (k !== DEMO.kind) { DEMO.kind = k; if (k) demoShot(); } }
 
 // ---- the match ------------------------------------------------------------
-function newMatch(mode) {
-  SEED = (Date.now() ^ Math.floor(Math.random()*1e9)) | 0; G.mode = mode;
-  G.players = [mkPlayer(0, mode === 'hot' ? 'Игрок 1' : 'Ты', mode === 'demo'), mkPlayer(1, mode === 'hot' ? 'Игрок 2' : 'Компьютер', mode !== 'hot')];
-  G.pool = KINDS.slice(); for (let i = G.pool.length - 1; i > 0; i--) { const j = Math.floor(rng()*(i + 1)), t = G.pool[i]; G.pool[i] = G.pool[j]; G.pool[j] = t; } G.pool.length = Math.min(G.pool.length, PICKS*2); while (G.pool.length < PICKS*2) G.pool.push(KINDS[Math.floor(rng()*KINDS.length)]); for (let i = G.pool.length - 1; i > 0; i--) { const j = Math.floor(rng()*(i + 1)), t = G.pool[i]; G.pool[i] = G.pool[j]; G.pool[j] = t; }
-  G.pool = G.pool.map((k) => ({ k: k, by: -1 })); G.dturn = 0; G.phase = 'draft'; G.theme = 1; DEMO.kind = ''; show('draft'); demoPick(0); drawDraft(); if (G.players[0].ai) draftAi();
+function mkPool() {                         // what is on offer in the draft: the same from the same seed
+  const l = KINDS.slice(), mix = () => { for (let i = l.length - 1; i > 0; i--) { const j = Math.floor(rng()*(i + 1)), t = l[i]; l[i] = l[j]; l[j] = t; } };
+  mix(); l.length = Math.min(l.length, PICKS*2); while (l.length < PICKS*2) l.push(KINDS[Math.floor(rng()*KINDS.length)]); mix(); return l.map((k) => ({ k: k, by: -1 }));
 }
-function pick(i) { const c = G.pool[i]; if (!c || c.by >= 0 || G.phase !== 'draft') return; c.by = G.dturn; G.players[G.dturn].weapons.push(c.k); sfx('click'); G.dturn = 1 - G.dturn;
-  if (G.pool.every((q) => q.by >= 0)) { startBattle(); return; } demoPick(G.dsel); drawDraft(); if (G.players[G.dturn].ai) draftAi(); }
+const turnTxt = () => G.mode === 'net' ? (G.turn === NET.me ? 'твой ход' : 'ход соперника') : cur().ai ? 'ход компьютера' : G.mode === 'hot' ? 'ход: ' + cur().name : 'твой ход';
+function newMatch(mode) {
+  netLeave(); SEED = (Date.now() ^ Math.floor(Math.random()*1e9)) | 0; G.mode = mode;
+  G.players = [mkPlayer(0, mode === 'hot' ? 'Игрок 1' : 'Ты', mode === 'demo'), mkPlayer(1, mode === 'hot' ? 'Игрок 2' : 'Компьютер', mode !== 'hot')];
+  G.pool = mkPool(); G.dturn = 0; G.phase = 'draft'; G.theme = 1; DEMO.kind = ''; show('draft'); demoPick(0); drawDraft(); if (G.players[0].ai) draftAi();
+}
+function pick(i) { const c = G.pool[i], net = G.mode === 'net'; if (!c || c.by >= 0 || G.phase !== 'draft') return; if (net && (G.dturn !== NET.me || NET.busy || NET.n % 2 !== NET.me)) return;
+  c.by = G.dturn; G.players[G.dturn].weapons.push(c.k); sfx('click'); G.dturn = 1 - G.dturn;
+  if (G.pool.every((q) => q.by >= 0)) { startBattle(); if (net) { const snap = pack(); unpack(snap); netSend({ mv: { i: i }, snap: snap }); } return; }
+  if (net) netSend({ mv: { i: i } });
+  demoPick(G.dsel); drawDraft(); if (!net && G.players[G.dturn].ai) draftAi(); }
 function draftAi() { const go = () => { if (G.phase !== 'draft' || !G.players[G.dturn].ai) return; const free = []; G.pool.forEach((q, i) => { if (q.by < 0) free.push(i); }); pick(free[Math.floor(rng()*free.length)]); }; if (G.fast) go(); else setTimeout(go, 420); }
-function draftAuto() { if (G.phase !== 'draft') return; const free = []; G.pool.forEach((q, i) => { if (q.by < 0) free.push(i); }); for (let i = free.length - 1; i > 0; i--) { const j = Math.floor(rng()*(i + 1)), t = free[i]; free[i] = free[j]; free[j] = t; }
+function draftAuto() { if (G.phase !== 'draft' || G.mode === 'net') return; const free = []; G.pool.forEach((q, i) => { if (q.by < 0) free.push(i); }); for (let i = free.length - 1; i > 0; i--) { const j = Math.floor(rng()*(i + 1)), t = free[i]; free[i] = free[j]; free[j] = t; }
   for (const i of free) { G.pool[i].by = G.dturn; G.players[G.dturn].weapons.push(G.pool[i].k); G.dturn = 1 - G.dturn; } startBattle(); }
-function startBattle() {
+function startBattle(snap) {
   DEMO.kind = ''; for (const p of G.players) { p.score = 0; p.flash = 0; p.ang = p.id ? 120 : 60; p.pow = 62; p.last = null; p.shots = 0; p.hits = 0; p.best = 0; p.recoil = 0; }
-  G.theme = Math.floor(rng()*THEMES.length); G.projs = []; G.fires = []; G.events = []; G.beams = []; FX.parts = []; FX.floats = []; FX.flashes = []; FX.trails = []; FX.scorch = []; G.t = 0; G.gmax = 0; genTerrain();
-  G.wind = WIND_ON ? Math.round(rr(-18, 18)) : 0; $('wind').style.display = WIND_ON ? '' : 'none'; G.turn = 0; G.phase = 'aim'; G.aiT = 0; G.stars = null; show(null); resize(); V.s = Math.min(CW/W, CH/560); V.ox = (CW - W*V.s)/2; ui(); if (!G.fast) toast(cur().ai ? 'Ход компьютера' : G.mode === 'hot' ? 'Ход: ' + cur().name : 'Твой ход');
+  G.theme = Math.floor(rng()*THEMES.length); G.projs = []; G.fires = []; G.events = []; G.beams = []; FX.parts = []; FX.floats = []; FX.flashes = []; FX.trails = []; FX.scorch = []; G.t = 0; G.gmax = 0; G.turn = 0; G.shot = null; if (snap) unpack(snap); else genTerrain();
+  G.wind = WIND_ON ? Math.round(rr(-18, 18)) : 0; $('wind').style.display = WIND_ON ? '' : 'none'; G.phase = 'aim'; G.aiT = 0; G.stars = null; show(null); resize(); V.s = Math.min(CW/W, CH/560); V.ox = (CW - W*V.s)/2; ui(); if (!G.fast) { const t = turnTxt(); toast(t[0].toUpperCase() + t.slice(1)); }
 }
 function showOver() {
-  const a = G.players[0], b = G.players[1], w = a.score === b.score ? null : a.score > b.score ? a : b;
-  $('ores').textContent = !w ? 'Ничья' : G.mode === 'hot' ? 'Победил ' + w.name : w === a ? 'Победа!' : 'Поражение'; $('ores').style.color = w ? w.col : '#fff';
-  for (const p of [a, b]) $('o' + p.id).innerHTML = p.name + '<b style="color:' + p.col + '">' + p.score + '</b><small>попаданий ' + p.hits + ' из ' + p.shots + '<br>лучший выстрел +' + p.best + '</small>'; show('over'); if (!G.fast) sfx(w === b && G.mode !== 'hot' ? 'lose' : 'win');
+  const a = G.players[0], b = G.players[1], w = a.score === b.score ? null : a.score > b.score ? a : b, net = G.mode === 'net', i = net ? G.players[NET.me] : a;
+  if (G.phase !== 'over') return; $('again').textContent = net ? 'Новый вызов' : 'Реванш';
+  $('ores').textContent = !w ? 'Ничья' : G.mode === 'hot' ? 'Победил ' + w.name : w === i ? 'Победа!' : 'Поражение'; $('ores').style.color = w ? w.col : '#fff';
+  for (const p of [a, b]) $('o' + p.id).innerHTML = p.name + '<b style="color:' + p.col + '">' + p.score + '</b><small>попаданий ' + p.hits + ' из ' + p.shots + '<br>лучший выстрел +' + p.best + '</small>'; show('over'); if (!G.fast) sfx(w && w !== i && G.mode !== 'hot' ? 'lose' : 'win');
 }
 
 // ---- screens and controls -------------------------------------------------
-function show(id) { for (const s of ['home', 'draft', 'help', 'over']) $(s).classList.toggle('hidden', s !== id); }
+function show(id) { for (const s of ['home', 'draft', 'help', 'over', 'wait']) $(s).classList.toggle('hidden', s !== id); }
 function drawDraft() {
-  const me = G.players[G.dturn]; $('dwho').textContent = G.mode === 'hot' ? 'Выбирает ' + me.name : me.ai ? 'Компьютер выбирает…' : 'Выбери оружие'; $('dwho').style.color = me.col;
+  const me = G.players[G.dturn]; $('dwho').textContent = G.mode === 'hot' ? 'Выбирает ' + me.name : G.mode === 'net' && me.ai ? 'Выбирает ' + me.name + '…' : me.ai ? 'Компьютер выбирает…' : 'Выбери оружие'; $('dauto').style.display = G.mode === 'net' ? 'none' : ''; $('dwho').style.color = me.col;
   $('dcnt').textContent = 'По ' + PICKS + ' каждому · нажми — посмотришь, ещё раз — возьмёшь';
   for (const p of G.players) { let h = '<h3>' + p.name + '</h3>'; for (let i = 0; i < PICKS; i++) { const k = p.weapons[i]; h += k ? '<div class="slot">' + icon(k) + '<span>' + WPN[k].name + '</span></div>' : '<div class="slot empty"></div>'; } const c = $('dp' + p.id); c.innerHTML = h; c.style.color = p.col; c.classList.toggle('on', p === me); }
   const g = $('dgrid'); g.innerHTML = ''; G.pool.forEach((c, i) => { const b = document.createElement('button'); b.className = 'wcard' + (c.by >= 0 ? ' gone' : '') + (i === G.dsel ? ' sel' : ''); b.innerHTML = icon(c.k) + '<div><b>' + WPN[c.k].name + '</b></div>'; b.onclick = () => { if (i === G.dsel) { if (!G.players[G.dturn].ai) pick(i); } else { sfxClick(); demoPick(i); drawDraft(); } }; g.appendChild(b); });
@@ -409,7 +438,7 @@ function ui() {
   for (const p of G.players) { const s = $('s' + p.id); s.querySelector('.nm').textContent = p.name; s.querySelector('.sc').textContent = p.score; s.classList.toggle('on', G.turn === p.id && G.phase !== 'over');
     let d = ''; for (let i = 0; i < p.total; i++) d += '<i' + (i < p.weapons.length ? '' : ' class="off"') + '></i>'; s.querySelector('.dots').innerHTML = d; }
   $('wind').querySelector('span').textContent = G.wind ? 'ветер ' + Math.abs(G.wind) : 'штиль'; $('wind').querySelector('svg').style.transform = G.wind < 0 ? 'scaleX(-1)' : ''; $('wind').querySelector('svg').style.opacity = G.wind ? 1 : 0.25;
-  $('turn').textContent = G.phase === 'fly' ? '' : P.ai ? 'Компьютер целится…' : ''; $('bar').classList.toggle('off', !human);
+  $('turn').textContent = G.phase !== 'aim' ? '' : G.mode === 'net' ? (P.ai ? 'Ход соперника…' : '') : P.ai ? 'Компьютер целится…' : ''; $('bar').classList.toggle('off', !human);
   const k = P.weapons[P.sel]; $('wbtn').innerHTML = k ? icon(k) + '<div><b>' + WPN[k].name + '</b><small>' + WPN[k].desc + '</small></div>' : '<div><b>Оружие кончилось</b></div>'; $('wbtn').style.borderColor = P.col;
   $('aV').textContent = Math.round(P.ang <= 90 ? P.ang : 180 - P.ang) + '°'; $('pV').textContent = Math.round(P.pow); $('fuel').firstChild.style.width = Math.round(P.fuel/FUEL*100) + '%'; $('fire').style.visibility = k ? '' : 'hidden';
 }
@@ -424,7 +453,7 @@ function drive(dt) { const P = cur(); if (!MOVE.dir || G.phase !== 'aim' || P.ai
   if (nx === P.x || Math.abs(nx - E.x) < 70 || ground[clamp(nx + MOVE.dir*6, 0, W)] - P.y > 9) return; P.fuel -= Math.abs(nx - P.x); P.x = nx; P.y = Math.max(P.y, ground[nx]); ui(); }
 $('fire').onclick = fire; $('wbtn').onclick = () => $('wlist').classList.contains('on') ? closeList() : openList();
 $('goAi').onclick = () => { audioOn(); newMatch('ai'); }; $('goHot').onclick = () => { audioOn(); newMatch('hot'); }; $('goHelp').onclick = () => show('help'); $('helpOk').onclick = () => show('home');
-$('again').onclick = () => newMatch(G.mode); $('toHome').onclick = () => { G.phase = 'home'; show('home'); }; $('dauto').onclick = draftAuto; $('ptake').onclick = () => { if (!G.players[G.dturn].ai && G.dsel >= 0) pick(G.dsel); }; function sfxClick() { const ph = G.phase; G.phase = ''; sfx('click'); G.phase = ph; } $('menuBtn').onclick = () => { G.phase = 'home'; G.projs = []; show('home'); };
+$('again').onclick = () => G.mode === 'net' ? netNew() : newMatch(G.mode); $('toHome').onclick = goHome; $('dauto').onclick = draftAuto; $('ptake').onclick = () => { if (!G.players[G.dturn].ai && G.dsel >= 0) pick(G.dsel); }; function sfxClick() { const ph = G.phase; G.phase = ''; sfx('click'); G.phase = ph; } $('menuBtn').onclick = goHome;
 for (const b of document.querySelectorAll('#diff .chip')) b.onclick = () => { G.diff = +b.dataset.d; for (const c of document.querySelectorAll('#diff .chip')) c.classList.toggle('on', c === b); };
 window.addEventListener('keydown', (e) => { if (G.phase !== 'aim' || cur().ai) return; const P = cur(), k = e.key.toLowerCase(), big = e.shiftKey ? 5 : 1;
   if (k === 'arrowleft') nudge('a', P.ang <= 90 ? big : -big); else if (k === 'arrowright') nudge('a', P.ang <= 90 ? -big : big); else if (k === 'arrowup') nudge('p', big); else if (k === 'arrowdown') nudge('p', -big);
@@ -592,13 +621,121 @@ function sfx(kind, size) {
   else if (kind === 'lose') { tone('triangle', 392, 370, 0.2, 0.25); tone('triangle', 330, 300, 0.4, 0.25, 0.2); }
 }
 
+// ---- duels over the network -----------------------------------------------
+// A duel lives on the server as a list of moves. The game of the player who fires works the shot out and sends, with the move, a picture of
+// the field after it; the other game plays the shot for the eye and then takes that picture over, so the two never drift apart.
+const API = 'https://tanks.basirxujamuradov.workers.dev', BOT = 'tankDuelBot';
+const TG = window.Telegram && Telegram.WebApp && Telegram.WebApp.initData ? Telegram.WebApp : null;
+let NET = null, pollT = 0;
+const zt = () => window.ZT || {}, initStr = () => zt().init || (TG ? TG.initData : '');
+async function api(path, q) { const r = await fetch((zt().api || API) + path, { method: 'POST', body: JSON.stringify(Object.assign({ init: initStr() }, q || {})) }); return await r.json(); }
+const B64 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_';
+function pack() {                           // the field as a short line of text: heights to a quarter of a point, grass as bits
+  let g = '', gr = ''; for (let x = 0; x <= W; x++) { const v = clamp(Math.round(ground[x]*4), 0, 4095); g += B64[v >> 6] + B64[v & 63]; }
+  for (let x = 0; x <= W; x += 6) { let b = 0; for (let j = 0; j < 6; j++) if (GRASS[x + j]) b |= 1 << j; gr += B64[b]; }
+  return JSON.stringify({ v: 1, g: g, gr: gr, th: G.theme, turn: G.turn, gm: G.gmax ? 1 : 0, p: G.players.map((p) => ({ x: p.x, a: Math.round(p.ang*100)/100, w: Math.round(p.pow*100)/100, k: p.weapons, s: p.score, f: Math.round(p.fuel), n: [p.shots, p.hits, p.best] })) });
+}
+function unpack(s, keep) {                  // keep: my own aim stays as I left it
+  const o = JSON.parse(s); for (let x = 0; x <= W; x++) { ground[x] = clamp((B64.indexOf(o.g[2*x])*64 + B64.indexOf(o.g[2*x + 1]))/4, 0, 640); GRASS[x] = B64.indexOf(o.gr[Math.floor(x/6)]) >> (x % 6) & 1; }
+  G.theme = clamp(o.th | 0, 0, THEMES.length - 1); G.turn = o.turn ? 1 : 0; G.gmax = o.gm ? 640 : 0;
+  o.p.forEach((q, i) => { const p = G.players[i], mine = keep && NET && i === NET.me; if (!p) return; p.x = clamp(q.x | 0, 34, W - 34); p.y = ground[p.x]; p.vy = 0; if (!mine) { p.ang = clamp(+q.a || 0, 0, 180); p.pow = clamp(+q.w || 5, 5, 100); }
+    p.weapons = (q.k || []).filter((k) => WPN[k]).slice(0, PICKS); p.sel = clamp(mine ? p.sel : 0, 0, Math.max(0, p.weapons.length - 1)); p.score = q.s | 0; p.fuel = clamp(q.f | 0, 0, FUEL); p.shots = q.n[0] | 0; p.hits = q.n[1] | 0; p.best = q.n[2] | 0; });
+}
+function netErr(e) { toast(e === 'auth' ? 'Открой игру через бота @' + BOT : e === 'full' ? 'В этой дуэли уже двое' : e === 'old' || e === 'none' ? 'Вызов устарел' : 'Нет связи с сервером', 2800); }
+function netLeave() { NET = null; clearTimeout(pollT); }
+function goHome() {
+  if (NET && NET.busy) { toast('Секунду: ход отправляется…'); return; }
+  if (G.mode === 'net' && G.phase === 'fly' && NET && !NET.replay) { toast('Дождись конца выстрела'); return; }
+  netLeave(); G.phase = 'home'; G.projs = []; G.fires = []; G.events = []; show('home'); netMine();
+}
+async function netNew() {
+  if (!initStr()) { toast('Дуэли с друзьями — в Telegram: @' + BOT, 3200); return; } if (netNew.busy) return; netNew.busy = true; audioOn();
+  try { const r = await api('/new'); if (!r.ok) netErr(r.err); else await netOpen(r.id); } catch (e) { netErr(); } netNew.busy = false;
+}
+async function netOpen(id) { try { const v = await api('/join', { id: id }); if (!v.ok) { netErr(v.err); return false; } netEnter(v); return true; } catch (e) { netErr(); return false; } }
+function netEnter(v) {                      // take a duel as the server has it: at the start, on coming back, and whenever the game finds itself behind
+  clearTimeout(pollT); NET = { id: v.id, me: v.me, n: v.n, seed: v.seed, st: v.st, busy: false, replay: null, shot: null, quiet: 0, sync: false, link: 'https://t.me/' + BOT + '?startapp=g_' + v.id };
+  SEED = v.seed; G.mode = 'net'; G.fast = false; G.players = [0, 1].map((i) => mkPlayer(i, v.names[i] || 'Соперник', i !== v.me)); G.pool = mkPool(); G.projs = []; G.fires = []; G.events = []; G.beams = []; closeList();
+  v.moves.forEach((m, j) => { const c = m.t === 'p' ? G.pool[m.i] : null; if (c && c.by < 0) { c.by = j % 2; G.players[j % 2].weapons.push(c.k); } });
+  if (v.st === 'open') { G.phase = 'home'; $('wLink').textContent = NET.link; show('wait'); }
+  else if (v.st === 'draft') { G.dturn = v.n % 2; G.phase = 'draft'; G.theme = 1; DEMO.kind = ''; show('draft'); demoPick(0); drawDraft(); }
+  else { try { startBattle(v.snap); } catch (e) { netLeave(); G.phase = 'home'; show('home'); toast('Дуэль повреждена'); return; } if (v.st === 'over') { G.phase = 'over'; ui(); showOver(); } }
+  netPollSoon(900);
+}
+async function netResync() { const N = NET; if (!N || N.sync) return; N.sync = true; try { const v = await api('/get', { id: N.id, n: 0 }); if (NET === N && v.ok) { netEnter(v); return; } } catch (e) {} N.sync = false; }
+function netPollSoon(ms) { clearTimeout(pollT); if (NET) pollT = setTimeout(netPoll, ms); }
+async function netPoll() {
+  const N = NET; if (!N || N.st === 'over') return;
+  const mine = N.st !== 'open' && N.n % 2 === N.me;
+  if (document.hidden || N.busy || N.replay || N.sync || mine || G.phase === 'fly') { netPollSoon(1200); return; }
+  let v = null; try { v = await api('/get', { id: N.id, n: N.n }); } catch (e) {}
+  if (NET !== N) return; if (v && v.ok && !N.busy) netTake(v);
+  if (NET === N) { N.quiet++; netPollSoon(N.quiet > 60 ? 6000 : 2400); }
+}
+function netTake(v) {                       // news from the server: one move of the other player is played out, anything else is taken whole
+  const N = NET; if (v.n === N.n && v.st === N.st) return; N.quiet = 0;
+  const foe = 1 - N.me, m = N.st !== 'open' && v.n === N.n + 1 && v.from === N.n && v.moves.length === 1 && N.n % 2 === foe ? v.moves[0] : null;
+  if (!m) { netResync(); return; }
+  if (m.t === 'p') {
+    const c = G.pool[m.i]; if (G.phase !== 'draft' || !c || c.by >= 0) { netResync(); return; }
+    N.n = v.n; N.st = v.st; c.by = foe; G.players[foe].weapons.push(c.k); sfx('click'); G.dturn = N.me;
+    if (v.st === 'play') { if (!v.snap) { netResync(); return; } startBattle(v.snap); } else { demoPick(G.dsel); drawDraft(); }
+  } else {
+    const P = G.players[foe]; if (G.phase !== 'aim' || !v.snap || !P.weapons[m.wi]) { netResync(); return; }
+    P.x = clamp(m.x | 0, 34, W - 34); P.y = ground[P.x]; P.ang = m.ang; P.pow = m.pow; P.sel = m.wi; N.replay = { snap: v.snap, n: v.n, st: v.st }; G.turn = foe; fire();
+  }
+}
+function netTurnEnd(said) {                 // a shot has come to rest
+  const N = NET; if (!N) return; G.aiT = 0;
+  if (N.replay) {
+    const r = N.replay, F = G.players[1 - N.me], I = G.players[N.me], was = [F.score - (G.netGain || 0), I.score - (G.netSelf || 0)]; N.replay = null; N.n = r.n; N.st = r.st; try { unpack(r.snap, true); } catch (e) { netResync(); return; }
+    // what is said about the shot comes from the picture the shooter sent, not from my own playing of it
+    const gain = F.score - was[0], self = I.score - was[1]; said = gain > 0 ? 'Попадание +' + gain : self > 0 ? 'По своим! +' + self + ' тебе' : 'Мимо'; if (gain > 0 && self > 0) said += ', тебе +' + self;
+    G.phase = r.st === 'over' ? 'over' : 'aim'; ui(); if (r.st === 'over') setTimeout(showOver, 700); else toast((said ? said + ' · ' : '') + 'твой ход', 2000);
+    return;
+  }
+  const done = G.players.every((p) => !p.weapons.length); G.turn = 1 - G.turn; const snap = pack(); unpack(snap, true);
+  G.phase = done ? 'over' : 'aim'; ui(); if (done) setTimeout(showOver, 700); else toast((said ? said + ' · ' : '') + 'ход соперника', 2000);
+  netSend({ mv: N.shot, snap: snap, score: [G.players[0].score, G.players[1].score] });
+}
+async function netSend(body) {              // my move goes to the server; it is sent again until it gets there
+  const N = NET; N.busy = true;
+  for (let k = 0; ; k++) {
+    let r = null; try { r = await api('/move', Object.assign({ id: N.id, n: N.n }, body)); } catch (e) {}
+    if (r && r.ok) { N.n = r.n; N.st = r.st; N.busy = false; N.quiet = 0; return; }
+    if (r && r.err) { N.busy = false; if (NET === N) { if (r.err !== 'stale') toast('Ход не принят, обновляю…', 2000); netResync(); } return; }
+    if (NET === N) toast('Нет связи, повторяю…', 2500);
+    await new Promise((f) => setTimeout(f, Math.min(8000, 1500 + k*1000)));
+  }
+}
+async function netShare() {                 // the challenge goes into a chat as a card with a button; if that is not to be had, as a link
+  const N = NET; if (!N) return; const uz = TG && TG.initDataUnsafe && TG.initDataUnsafe.user && String(TG.initDataUnsafe.user.language_code || '').indexOf('uz') === 0;
+  if (TG && TG.shareMessage && TG.isVersionAtLeast && TG.isVersionAtLeast('8.0')) { try { const r = await api('/share', { id: N.id, lang: uz ? 'uz' : 'ru' }); if (r.ok && r.id) { TG.shareMessage(r.id); return; } } catch (e) {} }
+  const url = 'https://t.me/share/url?url=' + encodeURIComponent(N.link) + '&text=' + encodeURIComponent('Вызываю на танковую дуэль в «Залп»! Кто точнее?');
+  if (TG && TG.openTelegramLink) TG.openTelegramLink(url); else window.open(url, '_blank');
+}
+async function netMine() {                  // my duels on the first screen: the ones waiting for my move come first
+  const box = $('mine'); if (!initStr()) { box.innerHTML = ''; return; }
+  let r = null; try { r = await api('/mine'); } catch (e) {} if (!r || !r.ok) return; box.innerHTML = '';
+  r.list.sort((a, b) => (b.mine ? 1 : 0) - (a.mine ? 1 : 0)).forEach((d) => { const b = document.createElement('button'); b.className = 'chip' + (d.mine ? ' on' : '');
+    b.textContent = d.st === 'open' ? 'Вызов ждёт соперника' : d.foe + (d.st === 'over' ? ' · ' + d.score[0] + ' : ' + d.score[1] : d.mine ? ' · твой ход' : ' · его ход'); b.onclick = () => { audioOn(); netOpen(d.id); }; box.appendChild(b); });
+}
+function netBoot() {
+  if (TG) { try { TG.ready(); TG.expand(); if (TG.disableVerticalSwipes) TG.disableVerticalSwipes(); if (TG.setHeaderColor) TG.setHeaderColor('#0b1020'); } catch (e) {} }
+  const sp = zt().start || (TG && TG.initDataUnsafe && TG.initDataUnsafe.start_param) || '', m = /^g_([a-z0-9]{6,12})$/.exec(sp);
+  if (m && initStr()) netOpen(m[1]); else netMine();
+}
+$('goNet').onclick = netNew; $('wSend').onclick = netShare; $('wHome').onclick = goHome;
+$('wCopy').onclick = () => { if (!NET) return; const ok = () => toast('Ссылка скопирована'); try { navigator.clipboard.writeText(NET.link).then(ok, () => toast('Выдели ссылку ниже и скопируй', 2600)); } catch (e) { toast('Выдели ссылку ниже и скопируй', 2600); } };
+document.addEventListener('visibilitychange', () => { if (!document.hidden && NET) netPollSoon(150); });
+
 // ---- the loop -------------------------------------------------------------
 let lastT = 0, acc = 0;
 function frame(ts) {
   const dt = Math.min(0.05, (ts - lastT)/1000 || 0); lastT = ts;
   if (G.phase === 'aim' || G.phase === 'fly' || G.phase === 'over') {
     drive(dt); acc += dt; let n = 0; while (acc >= STEP && n++ < 12) { stepWorld(); acc -= STEP; } if (n >= 12) acc = 0;
-    if (G.phase === 'aim' && cur().ai) { G.aiT += dt; if (G.aiT > 0.9 && !G.aiSet) { aiPlan(cur()); G.aiSet = true; ui(); } if (G.aiT > 1.7) { G.aiSet = false; fire(); } }
+    if (G.phase === 'aim' && cur().ai && G.mode !== 'net') { G.aiT += dt; if (G.aiT > 0.9 && !G.aiSet) { aiPlan(cur()); G.aiSet = true; ui(); } if (G.aiT > 1.7) { G.aiSet = false; fire(); } }
     draw(dt);
   } else if (G.phase === 'draft') demoTick(dt);
   requestAnimationFrame(frame);
@@ -608,7 +745,7 @@ function runFast(mode) {                    // a whole match with no pictures an
   while (G.phase !== 'over' && guard++ < 400000) { if (G.phase === 'aim') { aiPlan(cur()); fire(); } stepWorld(); }
   G.fast = false; return { a: G.players[0].score, b: G.players[1].score, steps: guard, phase: G.phase };
 }
-resize(); requestAnimationFrame(frame);
+resize(); requestAnimationFrame(frame); netBoot();
 </script>
 </body>
 </html>

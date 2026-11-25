@@ -1,0 +1,38 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>run</title></head><body style="margin:0;background:#000">
+<iframe id="fa" src="/index.html" style="width:640px;height:360px;border:0"></iframe><iframe id="fb" src="/index.html" style="width:640px;height:360px;border:0"></iframe>
+<script>
+const INITS = __INITS__, log = [], F = { a: document.getElementById('fa'), b: document.getElementById('fb') };
+const W = (k) => F[k].contentWindow, E = (k, js) => W(k).eval(js), wait = (ms) => new Promise((f) => setTimeout(f, ms));
+const until = async (fn, ms, what) => { const t0 = Date.now(); while (!fn()) { if (Date.now() - t0 > ms) throw new Error('timeout: ' + what); await wait(100); } };
+const loaded = (k) => new Promise((f) => { const w = W(k); if (w.document.readyState === 'complete' && w.netBoot) f(); else F[k].addEventListener('load', f, { once: true }); });
+function hook(k) { const w = W(k), un = w.unpack; w.DRIFT = 0; w.requestAnimationFrame = (f) => w.setTimeout(() => f(w.performance.now()), 16); w.draw = () => {}; w.demoTick = () => {}; w.frame(w.performance.now()); const la = w.launch; w.launch = function (P, kk) { w.LASTK = kk; return la(P, kk); }; w.addEventListener('error', (e) => { if (log.length < 30) log.push('ERR ' + k + ' ' + e.message + ' @' + e.lineno); }); w.unpack = function (s, keep) { if (w.eval('NET && G.phase === "fly" && !!NET') && keep) { const mine = JSON.parse(w.pack()), theirs = JSON.parse(s); if (mine.g !== theirs.g || mine.p[0].s !== theirs.p[0].s || mine.p[1].s !== theirs.p[1].s) { w.DRIFT++; let d = 0; for (let i = 0; i < mine.g.length; i++) if (mine.g[i] !== theirs.g[i]) d++; log.push('drift ' + k + ' ' + w.LASTK + ' ground chars ' + d + ' score ' + mine.p.map(q => q.s) + ' vs ' + theirs.p.map(q => q.s)); } } return un(s, keep); }; }
+let reloads = 0, shots = 0;
+async function main() {
+  await loaded('a'); await loaded('b');
+  W('a').ZT = { api: location.origin, init: INITS.a }; W('b').ZT = { api: location.origin, init: INITS.b }; hook('a'); hook('b');
+  W('a').netNew(); await until(() => E('a', 'NET && NET.st') === 'open', 5000, 'new'); const id = E('a', 'NET.id');
+  log.push('open ' + !E('a', 'document.getElementById("wait").classList.contains("hidden")') + ' link ' + E('a', 'NET.link').replace(id, 'ID'));
+  // a third person cannot get in after the second one has
+  W('b').ZT.start = 'g_' + id; W('b').netBoot(); await until(() => E('b', 'NET && NET.st') === 'draft', 5000, 'join'); await until(() => E('a', 'NET.st') === 'draft', 8000, 'a sees join');
+  log.push('draft a.me ' + E('a', 'NET.me') + ' b.me ' + E('b', 'NET.me') + ' names ' + E('b', 'G.players.map(p => p.name + (p.ai ? "*" : "")).join("/")') + ' pool same ' + (E('a', 'G.pool.map(c => c.k).join()') === E('b', 'G.pool.map(c => c.k).join()')));
+  const r3 = await (await fetch('/join', { method: 'POST', body: JSON.stringify({ init: INITS.c, id }) })).json(); log.push('third ' + r3.err);
+  const mineTurn = (k) => E(k, 'NET && !NET.busy && !NET.replay && !NET.sync && NET.n % 2 === NET.me');
+  for (let guard = 0; guard < 4000; guard++) {
+    for (const k of ['a', 'b']) {
+      const ph = E(k, 'G.phase'), st = E(k, 'NET ? NET.st : ""');
+      if (ph === 'draft' && mineTurn(k) && E(k, 'G.dturn === NET.me')) E(k, 'pick(G.pool.findIndex(c => c.by < 0))');
+      else if (ph === 'aim' && st === 'play' && mineTurn(k) && E(k, 'G.turn === NET.me')) { E(k, 'aiPlan(cur()); if (NET.n % 4 < 2) { MOVE.dir = NET.me ? -1 : 1; drive(0.2); drive(0.2); MOVE.dir = 0; } fire()'); shots++;
+        if (shots === 7 && !reloads) { reloads = 1; await wait(300); const o = k === 'a' ? 'b' : 'a';          // the other player closes the game in the middle of this shot and comes back
+          F[o].src = '/index.html?r=1'; await wait(200); await loaded(o); W(o).ZT = { api: location.origin, init: INITS[o], start: 'g_' + id }; hook(o); W(o).netBoot(); await until(() => E(o, 'NET && NET.st') === 'play', 6000, 'back'); log.push('came back at n ' + E(o, 'NET.n') + ' phase ' + E(o, 'G.phase')); } }
+    }
+    if (E('a', 'G.phase') === 'over' && E('b', 'G.phase') === 'over' && E('a', 'NET && !NET.busy') && E('b', 'NET && !NET.busy')) break;
+    await wait(150);
+  }
+  await wait(1200);
+  const res = (k) => E(k, 'G.phase + " n" + NET.n + " " + NET.st + " " + G.players.map(p => p.score).join(":") + " [" + document.getElementById("ores").textContent + "] left " + G.players.map(p => p.weapons.length).join()');
+  log.push('A ' + res('a')); log.push('B ' + res('b')); log.push('same field ' + (E('a', 'pack()') === E('b', 'pack()')) + ' drift ' + W('a').DRIFT + '/' + W('b').DRIFT + ' shots ' + shots);
+  E('a', 'goHome()'); await wait(800); log.push('mine: ' + E('a', '[...document.querySelectorAll("#mine .chip")].map(b => b.textContent).join(" | ")'));
+  log.push('server ' + await (await fetch('/log')).text());
+}
+main().catch((e) => log.push('FAIL ' + e.message + ' | a ' + E('a', 'G.phase + (NET ? " n" + NET.n + NET.st + " busy" + NET.busy + " rep" + !!NET.replay : "")') + ' b ' + E('b', 'G.phase + (NET ? " n" + NET.n + NET.st + " busy" + NET.busy + " rep" + !!NET.replay : "")'))).then(() => { document.title = log.join(' ## '); });
+</script></body></html>
