@@ -130,7 +130,7 @@
   <button class="main" id="goAi">Против компьютера</button>
   <div class="chips" id="diff"><button class="chip" data-d="0">Лёгкий</button><button class="chip on" data-d="1">Средний</button><button class="chip" data-d="2">Сильный</button></div>
   <button class="main alt" id="goNet">Дуэль с другом</button>
-  <div class="pair"><button class="ghost" id="goHot">Вдвоём на экране</button><button class="ghost" id="goHelp">Как играть</button></div>
+  <button class="ghost" id="goHelp">Как играть</button>
   <div id="mine"></div>
 </div>
 <div class="screen hidden" id="draft">
@@ -452,7 +452,7 @@ const MOVE = { dir: 0 }; for (const [id, d] of [['mvL', -1], ['mvR', 1]]) { cons
 function drive(dt) { const P = cur(); if (!MOVE.dir || G.phase !== 'aim' || P.ai || P.fuel <= 0) return; const E = other(P), nx = clamp(P.x + MOVE.dir*Math.max(1, Math.round(70*dt)), 34, W - 34);
   if (nx === P.x || Math.abs(nx - E.x) < 70 || ground[clamp(nx + MOVE.dir*6, 0, W)] - P.y > 9) return; P.fuel -= Math.abs(nx - P.x); P.x = nx; P.y = Math.max(P.y, ground[nx]); ui(); }
 $('fire').onclick = fire; $('wbtn').onclick = () => $('wlist').classList.contains('on') ? closeList() : openList();
-$('goAi').onclick = () => { audioOn(); newMatch('ai'); }; $('goHot').onclick = () => { audioOn(); newMatch('hot'); }; $('goHelp').onclick = () => show('help'); $('helpOk').onclick = () => show('home');
+$('goAi').onclick = () => { audioOn(); newMatch('ai'); }; $('goHelp').onclick = () => show('help'); $('helpOk').onclick = () => show('home');
 $('again').onclick = () => G.mode === 'net' ? netNew() : newMatch(G.mode); $('toHome').onclick = goHome; $('dauto').onclick = draftAuto; $('ptake').onclick = () => { if (!G.players[G.dturn].ai && G.dsel >= 0) pick(G.dsel); }; function sfxClick() { const ph = G.phase; G.phase = ''; sfx('click'); G.phase = ph; } $('menuBtn').onclick = goHome;
 for (const b of document.querySelectorAll('#diff .chip')) b.onclick = () => { G.diff = +b.dataset.d; for (const c of document.querySelectorAll('#diff .chip')) c.classList.toggle('on', c === b); };
 window.addEventListener('keydown', (e) => { if (G.phase !== 'aim' || cur().ai) return; const P = cur(), k = e.key.toLowerCase(), big = e.shiftKey ? 5 : 1;
