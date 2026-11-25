@@ -193,6 +193,15 @@ const ICON = {
   chain: '<circle cx="4" cy="16" r="3" fill="C"/><circle cx="12" cy="13" r="3.6" fill="C" opacity=".8"/><circle cx="20" cy="9" r="4" fill="C" opacity=".6"/>',
   tele: '<path d="M12 2v6M12 16v6M2 12h6M16 12h6M5 5l4 4M15 15l4 4M19 5l-4 4M9 15l-4 4" stroke="C" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="12" r="2.5" fill="C"/>',
   acid: '<path d="M12 2c4 6 7 9 7 13a7 7 0 0 1-14 0c0-4 3-7 7-13z" fill="C"/><circle cx="10" cy="15" r="1.6" fill="#0b1020"/><circle cx="14" cy="17.5" r="1.1" fill="#0b1020"/>',
+  plasma: '<circle cx="12" cy="12" r="6" fill="C"/><circle cx="12" cy="12" r="9.5" fill="none" stroke="C" stroke-width="1.5" opacity=".5"/><path d="M12 1v3M12 20v3M1 12h3M20 12h3" stroke="C" stroke-width="1.6" stroke-linecap="round"/>',
+  rocket: '<path d="M20 4c-6 0-11 4-13 10l3 3c6-2 10-7 10-13z" fill="C"/><path d="M7 14l-4 1 2 2zM10 17l-1 4 2-2z" fill="C"/><path d="M6 18c-1 1-2 3-2 3s2-1 3-2" stroke="C" stroke-width="1.6" fill="none" stroke-linecap="round"/>',
+  lightning: '<path d="M13 2 5 13h6l-2 9 9-12h-6l1-8z" fill="C"/>',
+  quake: '<path d="M1 17h4l2-5 3 8 3-12 3 9 2-4h5" stroke="C" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 5h18" stroke="C" stroke-width="1.4" opacity=".5"/>',
+  meteor: '<circle cx="15" cy="15" r="5.5" fill="C"/><path d="M2 2l9 9M6 2l7 7M2 7l7 6" stroke="C" stroke-width="2" stroke-linecap="round" opacity=".7"/>',
+  crawler: '<ellipse cx="11" cy="13" rx="6" ry="5" fill="C"/><circle cx="17.5" cy="10" r="2.8" fill="C"/><path d="M7 17l-3 4M11 18v4M15 17l3 4M7 9 4 6M11 8V4" stroke="C" stroke-width="1.6" stroke-linecap="round"/>',
+  hedge: '<circle cx="12" cy="13" r="4" fill="C"/><path d="M12 9V2M12 17v5M8 13H1M16 13h7M9 10 4 5M15 10l5-5M9 16l-5 5M15 16l5 5" stroke="C" stroke-width="1.8" stroke-linecap="round"/>',
+  hole: '<circle cx="12" cy="12" r="4.5" fill="#0b1020" stroke="C" stroke-width="1.6"/><path d="M12 3a9 9 0 0 1 9 9M21 12a9 9 0 0 1-9 9M12 21a9 9 0 0 1-9-9M3 12a9 9 0 0 1 9-9" stroke="C" stroke-width="1.8" fill="none" stroke-dasharray="6 4"/>',
+  nuke: '<circle cx="12" cy="12" r="10" fill="C"/><path d="M12 12 7 3.4a10 10 0 0 1 10 0zM12 12l9.9 1.5a10 10 0 0 1-5 8.6zM12 12l-4.9 8.6a10 10 0 0 1-5-8.6z" fill="#0b1020"/><circle cx="12" cy="12" r="2.3" fill="C"/>',
   laser: '<path d="M2 21 22 3" stroke="C" stroke-width="3" stroke-linecap="round"/><path d="M4 9l3 3M11 4l2 4M16 14l4 2" stroke="C" stroke-width="1.6" stroke-linecap="round" opacity=".7"/>',
 };
 const WPN = {
@@ -215,15 +224,28 @@ const WPN = {
   dirt:    { name: 'Гора',        desc: 'Насыпает холм земли. Урона нет',             col: '#d9b38c' },
   tele:    { name: 'Телепорт',    desc: 'Переносит твой танк туда, куда упал',        col: '#9fb4ff' },
   laser:   { name: 'Лазер',       desc: 'Мгновенный луч сквозь землю. Сила не важна', col: '#ff63dc' },
+  plasma:  { name: 'Плазма',      desc: 'Лёгкий шар: летит высокой дугой, взрыв широкий', col: '#6fb8ff' },
+  rocket:  { name: 'Ракета',      desc: 'Двигатель разгоняет её: летит дальше и прямее', col: '#ff7a59' },
+  lightning: { name: 'Молния',    desc: 'Через миг в точку удара бьёт молния и перескакивает на танк', col: '#9fe6ff' },
+  quake:   { name: 'Землетрясение', desc: 'Трясёт землю вокруг: рушит холмы и бьёт всех рядом', col: '#d8a25a' },
+  meteor:  { name: 'Метеоры',     desc: 'Маркер зовёт с неба дождь из семи камней',    col: '#ff9a3c' },
+  crawler: { name: 'Жук',         desc: 'Ползёт по земле к врагу, через любые холмы, и взрывается', col: '#e8ff6a' },
+  hedge:   { name: 'Ёж',          desc: 'От удара во все стороны летят восемь игл',    col: '#ff5f6d' },
+  hole:    { name: 'Чёрная дыра', desc: 'Затягивает землю и танки, потом схлопывается', col: '#b57bff' },
+  nuke:    { name: 'Ядерка',      desc: 'Чудовищный взрыв. Не стреляй себе под ноги',  col: '#fff06a' },
 };
+// how a shell flies: speed against an ordinary one, its own gravity, an engine
+const FLY = { sniper: { v: 1.45, nw: 1 }, heavy: { v: 0.86 }, nuke: { v: 0.8 }, plasma: { v: 0.8, g: 0.55 }, rocket: { v: 0.8, thr: 520, burn: 0.7 } }, NOFLY = {};
+const fly = (k) => FLY[k] || NOFLY;
+const CHILD = { airbomb: 'air', fountc: 'fount', spike: 'hedge', metr: 'meteor' };
 const KINDS = Object.keys(WPN);
 const icon = (k) => '<svg viewBox="0 0 24 24">' + ICON[k].replace(/C/g, WPN[k].col) + '</svg>';
 
 // ---- the state ------------------------------------------------------------
 const ground = new Float32Array(W + 1), GRASS = new Uint8Array(W + 1);
 const G = { phase: 'home', mode: 'ai', diff: 1, turn: 0, wind: 0, t: 0, players: [], pool: [], dturn: 0, projs: [], fires: [], events: [], beams: [], rest: 0, theme: 0, fast: false };
-const FX = { parts: [], floats: [], shake: 0, flashes: [], trails: [], scorch: [], white: 0 };
-const pcol = (p) => WPN[p.kind === 'airbomb' ? 'air' : p.kind === 'fountc' ? 'fount' : p.kind].col;
+const FX = { parts: [], floats: [], shake: 0, flashes: [], trails: [], scorch: [], white: 0, holes: [] };
+const pcol = (p) => WPN[CHILD[p.kind] || p.kind].col;
 const cur = () => G.players[G.turn], other = (p) => G.players[1 - p.id];
 const gAt = (x) => ground[clamp(Math.round(x), 0, W)];
 function mkPlayer(id, name, ai) { return { id: id, name: name, ai: ai, col: id ? '#5ee0d0' : '#ffd23f', x: 0, y: 0, vy: 0, ang: id ? 120 : 60, pow: 62, weapons: [], sel: 0, score: 0, fuel: FUEL, flash: 0, total: PICKS, shots: 0, hits: 0, best: 0, recoil: 0 }; }
@@ -261,10 +283,9 @@ function launch(P, k) {                     // the shot itself: used by a battle
   const a = P.ang*Math.PI/180, m = muzzle(P), v = P.pow*SPD;
   if (k === 'laser') laser(P, a, m);
   else if (k === 'triple') for (const d of [-4.5, 0, 4.5]) spawn(k, P, m.x, m.y, a + d*Math.PI/180, v);
-  else if (k === 'sniper') spawn(k, P, m.x, m.y, a, P.pow*SPD*1.45);
   else if (k === 'shot') for (let i = 0; i < 7; i++) spawn(k, P, m.x, m.y, a + rr(-5, 5)*Math.PI/180, v*rr(0.93, 1.04));
-  else if (k === 'heavy') spawn(k, P, m.x, m.y, a, v*0.86);
-  else spawn(k, P, m.x, m.y, a, v, k === 'bounce' ? { left: 3 } : null);
+  else spawn(k, P, m.x, m.y, a, v*(fly(k).v || 1), k === 'bounce' ? { left: 3 } : null);
+  if (k === 'rocket') sfx('whoosh');
   for (let i = 0; i < 10; i++) part(m.x, m.y, Math.cos(a)*rnd(60, 220) + rnd(-40, 40), Math.sin(a)*rnd(60, 220) + rnd(-40, 40), rnd(0.2, 0.5), '#fff2c2', rnd(2, 4), 0);
   sfx(k === 'laser' ? 'laser' : 'shot');
 }
@@ -279,32 +300,73 @@ function hit(t, dmg, owner) {               // points for damage; a hit on yours
   const who = t === owner ? other(owner) : owner; dmg = Math.max(1, Math.round(dmg)); who.score += dmg; t.flash = 0.35;
   FX.floats.push({ x: t.x + rnd(-10, 10), y: t.y + 50, txt: '+' + dmg, col: who.col, life: 1.3 }); t.jolt = 1; sfx('hit');
 }
-function boom(x, y, r, dmg, owner) {
+const PAL = {                               // the colours of a blast: heart, middle, edge, the smoke it leaves; and its sparks
+  fire: [[255,255,245], [255,224,120], [255,120,40], [140,30,20], '#fff3b0', '#ffb347'],
+  plasma: [[240,250,255], [140,210,255], [50,110,255], [20,20,120], '#d8f0ff', '#6fb8ff'],
+  acid: [[245,255,220], [210,255,120], [110,210,30], [20,80,10], '#eaffb0', '#b6f23c'],
+  void: [[255,225,255], [205,130,255], [110,40,210], [25,0,50], '#f0d0ff', '#b57bff'],
+  elec: [[255,255,255], [200,235,255], [110,170,255], [30,40,130], '#ffffff', '#9fe6ff'],
+  nuke: [[255,255,255], [255,250,190], [255,160,50], [130,40,20], '#ffffff', '#fff06a'],
+  dust: [[255,245,220], [230,200,150], [170,120,70], [70,45,25], '#f0dcb0', '#c9a27a'],
+};
+function boom(x, y, r, dmg, owner, pal) {
   carve(x, y, r);
   for (const t of G.players) { const d = Math.hypot(t.x - x, t.y + 10 - y), reach = r + 20; if (d < reach) hit(t, dmg*Math.pow(1 - d/reach, 0.7), owner); }
-  FX.flashes.push({ x: x, y: y, r: r, life: 0.45, max: 0.45 }); if (!G.fast) { FX.scorch.push({ x: x, y: y, r: r*1.35, heat: 1 }); if (r > 60) FX.white = 0.45; for (let i = 0; i < Math.min(9, 3 + r/9); i++) FX.parts.push({ x: x + rnd(-r, r)*0.45, y: y + rnd(0, r)*0.4, vx: rnd(-34, 34), vy: rnd(24, 80), life: rnd(1.1, 2.1), max: 2.1, col: '46,44,52', size: rnd(r*0.35, r*0.7), g: -0.02, smoke: true }); if (FX.scorch.length > 40) FX.scorch.shift(); for (let i = 0; i < 12; i++) { const a = rnd(0, 6.283), v = rnd(120, 200 + r*4); part(x, y, Math.cos(a)*v, Math.abs(Math.sin(a))*v, rnd(0.25, 0.6), i % 2 ? '#fff3b0' : '#ffb347', rnd(2, 4), 0.6, true); } } FX.shake = Math.max(FX.shake, r*0.22);
+  const P = PAL[pal] || PAL.fire; FX.flashes.push({ x: x, y: y, r: r, life: pal === 'nuke' ? 1.1 : 0.45, max: pal === 'nuke' ? 1.1 : 0.45, pal: P }); if (!G.fast) { FX.scorch.push({ x: x, y: y, r: r*1.35, heat: 1 }); if (r > 60) FX.white = 0.45; for (let i = 0; i < Math.min(9, 3 + r/9); i++) FX.parts.push({ x: x + rnd(-r, r)*0.45, y: y + rnd(0, r)*0.4, vx: rnd(-34, 34), vy: rnd(24, 80), life: rnd(1.1, 2.1), max: 2.1, col: '46,44,52', size: rnd(r*0.35, r*0.7), g: -0.02, smoke: true }); if (FX.scorch.length > 40) FX.scorch.shift(); for (let i = 0; i < 12; i++) { const a = rnd(0, 6.283), v = rnd(120, 200 + r*4); part(x, y, Math.cos(a)*v, Math.abs(Math.sin(a))*v, rnd(0.25, 0.6), i % 2 ? P[4] : P[5], rnd(2, 4), 0.6, true); } } FX.shake = Math.max(FX.shake, r*0.22);
   const th = THEMES[G.theme]; for (let i = 0; i < Math.min(26, 8 + r*0.35); i++) { const a = rnd(0.15, 2.99), v = rnd(80, 90 + r*5); part(x, y, Math.cos(a)*v, Math.sin(a)*v, rnd(0.5, 1.1), i % 3 ? (i % 2 ? th.earth[0] : th.top) : th.grass, rnd(2.5, 6), 1); }
   sfx('boom', r);
 }
+function bolt(x, o) {                       // the lightning: straight down onto the mark, and on to a tank that stands near
+  const y = gAt(x), E = other(o); carve(x, y, 26); for (const t of G.players) { const d = Math.abs(t.x - x); if (d < 60) hit(t, 46*(1 - d/85), o); }
+  const d = Math.abs(E.x - x); if (d >= 60 && d < 230) { hit(E, 20, o); G.beams.push({ x0: x, y0: y + 6, x1: E.x, y1: E.y + 14, life: 0.5, col: WPN.lightning.col, zig: 1 }); }
+  G.beams.push({ x0: x + rr(-60, 60), y0: 1500, x1: x, y1: y, life: 0.55, col: WPN.lightning.col, zig: 1 }); FX.flashes.push({ x: x, y: y, r: 34, life: 0.4, max: 0.4, pal: PAL.elec }); FX.white = Math.max(FX.white, 0.35); FX.shake = Math.max(FX.shake, 9);
+  if (!G.fast) for (let i = 0; i < 18; i++) { const a = rnd(0.1, 3.04), v = rnd(120, 320); part(x, y, Math.cos(a)*v, Math.sin(a)*v, rnd(0.2, 0.5), i % 2 ? '#ffffff' : '#9fe6ff', rnd(2, 3.5), 0.4, true); } sfx('zap');
+}
+function quakeTick(x, o) {                  // one jolt of the earthquake: bites out of the hills and knocks whoever stands close
+  for (let j = 0; j < 3; j++) { const qx = clamp(x + rr(-230, 230), 2, W - 2); carve(qx, gAt(qx) + rr(-4, 8), rr(10, 22)); }
+  for (const t of G.players) { const d = Math.abs(t.x - x); if (d < 250 && G.quake < 28) { const dm = Math.min(28 - G.quake, Math.max(1, Math.round(4.4*(1 - d/250) + 0.4))); G.quake += dm; hit(t, dm, o); t.vy = 60; t.y += 2; } }
+  FX.shake = Math.max(FX.shake, 11); if (!G.fast) for (let i = 0; i < 10; i++) { const px = x + rnd(-240, 240); FX.parts.push({ x: px, y: gAt(px), vx: rnd(-20, 20), vy: rnd(20, 70), life: rnd(0.8, 1.5), max: 1.5, col: '150,120,90', size: rnd(8, 16), g: -0.01, smoke: true }); }
+}
+function holeTick(x, y, i) {                // the black hole grows and draws the tanks in
+  carve(x, y, 10 + i*3.1);
+  for (const t of G.players) { const d = t.x - x, ad = Math.abs(d); if (ad < 290 && ad > 5) { const st = Math.round(clamp(-Math.sign(d)*(1 - ad/290)*24, -(ad - 4), ad - 4)), nx = clamp(t.x + st, 34, W - 34); if (Math.abs(nx - other(t).x) >= 70) t.x = nx; } }
+}
+function nuke(x, y, o) {
+  boom(x, y, 125, 64, o, 'nuke'); FX.white = 1.2; FX.shake = Math.max(FX.shake, 34); sfx('nuke');
+  if (!G.fast) { for (let i = 0; i < 34; i++) FX.parts.push({ x: x + rnd(-16, 16), y: y + rnd(0, 30), vx: rnd(-12, 12), vy: rnd(70, 300), life: rnd(2.4, 3.4), max: 3.4, col: '84,64,58', size: rnd(18, 30), g: 0.25, smoke: true });
+    for (let i = 0; i < 30; i++) FX.parts.push({ x: x + rnd(-20, 20), y: y + 30, vx: rnd(-150, 150), vy: rnd(250, 330), life: rnd(2.6, 3.6), max: 3.6, col: i % 3 ? '96,72,62' : '170,90,50', size: rnd(28, 46), g: 0.44, smoke: true });
+    for (let i = 0; i < 30; i++) { const a = rnd(0, 3.14), v = rnd(200, 520); part(x, y, Math.cos(a)*v, Math.sin(a)*v, rnd(0.5, 1.2), i % 2 ? '#ffffff' : '#fff06a', rnd(3, 5), 0.5, true); } }
+}
 function impact(p, tank) {                  // what each kind does where it lands; returns true when the shell is spent
   const k = p.kind, o = p.owner;
-  if (k === 'he') boom(p.x, p.y, 54, 44, o);
+  if (k === 'he') boom(p.x, p.y, 50, 40, o);
   else if (k === 'triple') boom(p.x, p.y, 34, 26, o);
-  else if (k === 'cluster') boom(p.x, p.y, p.child ? 28 : 34, p.child ? 17 : 20, o);
+  else if (k === 'cluster') boom(p.x, p.y, p.child ? 28 : 34, p.child ? 20 : 20, o);
   else if (k === 'airbomb') boom(p.x, p.y, 34, 21, o);
-  else if (k === 'heavy') boom(p.x, p.y, 78, 44, o);
-  else if (k === 'shot') boom(p.x, p.y, 16, 14, o);
+  else if (k === 'heavy') boom(p.x, p.y, 84, 50, o);
+  else if (k === 'shot') boom(p.x, p.y, 16, 12, o);
   else if (k === 'pit') boom(p.x, p.y, 96, 16, o);
   else if (k === 'fountc') boom(p.x, p.y, 22, 7, o);
   else if (k === 'fount') { boom(p.x, p.y, 22, 10, o); const gx = clamp(p.x, 2, W - 2); for (let i = 0; i < 6; i++) spawn('fountc', o, gx, gAt(gx) + 8, 0, 0, { vx: rr(-150, 150), vy: rr(300, 480), age: 0.31 }); sfx('pop'); }
   else if (k === 'chain') { const dir = p.vx < 0 ? -1 : 1, x0 = p.x - dir*60; for (let i = 0; i <= 4; i++) G.events.push({ t: G.t + i*0.14, fn: () => { const bx = clamp(x0 + dir*i*48, 2, W - 2); boom(bx, gAt(bx), 30, 22, o); } }); }
   else if (k === 'dirt') { addDirt(p.x, 78); for (let i = 0; i < 18; i++) part(p.x + rnd(-60, 60), p.y, rnd(-40, 40), rnd(60, 200), rnd(0.4, 0.9), THEMES[G.theme].earth[0], rnd(3, 6), 1); sfx('pop'); }
   else if (k === 'tele') { const E = other(o); let nx = clamp(Math.round(p.x), 34, W - 34); if (Math.abs(nx - E.x) < 70) nx = clamp(E.x + (nx < E.x ? -70 : 70), 34, W - 34); for (const xx of [o.x, nx]) for (let i = 0; i < 16; i++) part(xx, gAt(xx) + 14, rnd(-90, 90), rnd(20, 220), rnd(0.3, 0.8), WPN.tele.col, rnd(2, 4), 0, true); o.x = nx; o.y = ground[nx]; o.vy = 0; o.flash = 0.3; sfx('flare'); }
-  else if (k === 'acid') { boom(p.x, p.y, 14, 6, o); for (let i = 0; i < 18; i++) G.fires.push({ x: clamp(p.x + rr(-30, 30), 2, W - 2), life: rr(2.4, 3.2), owner: o, ph: rr(0, 6.28), acid: true }); G.fireTick = 0; G.fireDmg = 0; G.fireCap = 26; sfx('fire'); }
+  else if (k === 'acid') { boom(p.x, p.y, 14, 6, o, 'acid'); for (let i = 0; i < 18; i++) G.fires.push({ x: clamp(p.x + rr(-30, 30), 2, W - 2), life: rr(2.4, 3.2), owner: o, ph: rr(0, 6.28), acid: true }); G.fireTick = 0; G.fireDmg = 0; G.fireCap = 30; sfx('fire'); }
   else if (k === 'roll') { if (tank || p.roll) boom(p.x, p.y, 44, 38, o); else { p.roll = 3.2; p.vx *= 0.5; sfx('drill'); return false; } }
-  else if (k === 'homing') boom(p.x, p.y, 42, 36, o);
-  else if (k === 'sniper') { boom(p.x, p.y, 24, 14, o); if (tank) hit(tank, 36, o); }
-  else if (k === 'napalm') { boom(p.x, p.y, 18, 8, o); for (let i = 0; i < 22; i++) G.fires.push({ x: clamp(p.x + rr(-34, 34), 2, W - 2), life: rr(2.4, 3.4), owner: o, ph: rr(0, 6.28) }); G.fireTick = 0; G.fireDmg = 0; G.fireCap = 34; sfx('fire'); }
+  else if (k === 'homing') boom(p.x, p.y, 40, 32, o);
+  else if (k === 'plasma') { boom(p.x, p.y, 64, 38, o, 'plasma'); sfx('zap'); }
+  else if (k === 'rocket') boom(p.x, p.y, 46, 36, o);
+  else if (k === 'nuke') nuke(p.x, p.y, o);
+  else if (k === 'metr') boom(p.x, p.y, 32, 20, o);
+  else if (k === 'spike') boom(p.x, p.y, 22, 15, o, 'fire');
+  else if (k === 'lightning') { boom(p.x, p.y, 14, 6, o, 'elec'); const lx = clamp(p.x, 2, W - 2); G.events.push({ t: G.t + 0.45, fn: () => bolt(lx, o) }); sfx('pop'); }
+  else if (k === 'quake') { boom(p.x, p.y, 22, 10, o, 'dust'); const qx = p.x; G.quake = 0; for (let i = 1; i <= 12; i++) G.events.push({ t: G.t + i*0.1, fn: () => quakeTick(qx, o) }); sfx('rumble'); }
+  else if (k === 'meteor') { const dir = p.vx < 0 ? -1 : 1; for (let i = 0; i < 7; i++) { const bx = clamp(p.x + rr(-170, 170), 4, W - 4); G.events.push({ t: G.t + 0.3 + i*0.15, fn: () => spawn('metr', o, bx - dir*190, 1250, -Math.PI/2 + dir*0.3, 420) }); } for (let i = 0; i < 14; i++) part(p.x, p.y, rnd(-30, 30), rnd(60, 240), rnd(0.5, 1), '#ff9a3c', rnd(2, 4), 0.2); sfx('flare'); }
+  else if (k === 'hedge') { boom(p.x, p.y, 20, 10, o); for (const d of [-25, 8, 38, 68, 112, 142, 172, 205]) spawn('spike', o, p.x, p.y + 8, d*Math.PI/180, 430, { life: 0.4, age: 0.31 }); sfx('pop'); }
+  else if (k === 'hole') { const hx = clamp(p.x, 2, W - 2), hy = p.y; FX.holes.push({ x: hx, y: hy, life: 1.8, max: 1.8 }); for (let i = 1; i <= 16; i++) G.events.push({ t: G.t + i*0.1, fn: () => holeTick(hx, hy, i) }); G.events.push({ t: G.t + 1.75, fn: () => boom(hx, Math.max(14, gAt(hx)), 56, 34, o, 'void') }); sfx('hole'); }
+  else if (k === 'crawler') { if (tank || p.crawl) boom(p.x, p.y, 44, 40, o, 'acid'); else { p.crawl = 2.8; p.dir = other(o).x > p.x ? 1 : -1; sfx('drill'); return false; } }
+  else if (k === 'sniper') { boom(p.x, p.y, 22, 12, o, 'elec'); if (tank) hit(tank, 42, o); }
+  else if (k === 'napalm') { boom(p.x, p.y, 18, 8, o); for (let i = 0; i < 22; i++) G.fires.push({ x: clamp(p.x + rr(-34, 34), 2, W - 2), life: rr(2.4, 3.4), owner: o, ph: rr(0, 6.28) }); G.fireTick = 0; G.fireDmg = 0; G.fireCap = 40; sfx('fire'); }
   else if (k === 'air') { for (let i = 0; i < 5; i++) { const bx = clamp(p.x + (i - 2)*46 + rr(-10, 10), 4, W - 4); G.events.push({ t: G.t + 0.35 + i*0.17, fn: () => spawn('airbomb', o, bx, 1150, -Math.PI/2, 260) }); } for (let i = 0; i < 14; i++) part(p.x, p.y, rnd(-30, 30), rnd(60, 240), rnd(0.5, 1), '#ffd23f', rnd(2, 4), 0.2); sfx('flare'); }
   else if (k === 'bounce') { boom(p.x, p.y, p.left > 0 ? 32 : 40, p.left > 0 ? 24 : 30, o); if (p.left-- > 0 && !tank) { p.y = gAt(p.x) + 6; p.vy = Math.abs(p.vy)*0.5 + 190; p.vx *= 0.8; p.age = 0.31; return false; } }
   else if (k === 'drill') { if (tank) boom(p.x, p.y, 42, 36, o); else if (!p.bore) { const v = Math.hypot(p.vx, p.vy) || 1; p.bore = 0.8; p.vx = p.vx/v*300; p.vy = p.vy/v*300; sfx('drill'); return false; } else boom(p.x, p.y, 42, 36, o); }
@@ -320,10 +382,19 @@ function stepProj(p) {                      // one step of one shell; returns tr
     p.roll -= STEP; const sl = gAt(p.x + 5) - gAt(p.x - 5); p.vx = clamp((p.vx - sl*95*STEP)*(1 - 0.5*STEP), -280, 280); p.x += p.vx*STEP; p.y = gAt(p.x) + 6; if (p.n % 2 === 0 && !G.fast) { (p.trail || (p.trail = [])).push(p.x, p.y); if (p.trail.length > 110) p.trail.splice(0, 2); }
     for (const t of G.players) if ((t !== p.owner || p.roll < 2.6) && Math.abs(p.x - t.x) < 24) return impact(p, t);
     if (p.roll <= 0 || p.x < 3 || p.x > W - 3 || (Math.abs(p.vx) < 14 && p.roll < 2.5)) return impact(p, null); return false; }
-  const sn = p.kind === 'sniper';
+  if (p.kind === 'spike') {                 // a needle of the hedgehog: straight, through the earth, and off at the end
+    p.life -= STEP; p.x += p.vx*STEP; p.y += p.vy*STEP; if (p.n % 2 === 0 && p.y < gAt(p.x)) carve(p.x, p.y, 7); if (p.n % 2 === 0 && !G.fast) { (p.trail || (p.trail = [])).push(p.x, p.y); }
+    for (const t of G.players) if (Math.hypot(p.x - t.x, p.y - (t.y + 10)) < 20) return impact(p, t);
+    if (p.life <= 0 || p.y < 10 || p.x < 2 || p.x > W - 2) return impact(p, null); return false; }
+  if (p.crawl) {                            // the beetle: along the ground towards the enemy, up hill and down
+    p.crawl -= STEP; p.x = clamp(p.x + p.dir*125*STEP, 2, W - 2); p.y = gAt(p.x) + 5; if (p.n % 3 === 0 && !G.fast) part(p.x - p.dir*6, p.y - 3, -p.dir*rnd(10, 40), rnd(20, 60), 0.4, THEMES[G.theme].earth[0], 2.5, 1);
+    for (const t of G.players) if (t !== p.owner && Math.abs(p.x - t.x) < 20) return impact(p, t);
+    if (p.crawl <= 0 || p.x <= 2 || p.x >= W - 2) return impact(p, null); return false; }
+  const f = fly(p.kind); if (f.thr && p.age < f.burn) { const v = Math.hypot(p.vx, p.vy) || 1; p.vx += p.vx/v*f.thr*STEP; p.vy += p.vy/v*f.thr*STEP; }
+  if (!G.fast && p.n % 3 === 0 && ((p.kind === 'rocket' && p.age < f.burn) || p.kind === 'metr')) FX.parts.push({ x: p.x, y: p.y, vx: rnd(-12, 12), vy: rnd(-6, 16), life: rnd(0.5, 0.9), max: 0.9, col: p.kind === 'metr' ? '90,60,40' : '120,120,130', size: rnd(4, 7), g: -0.02, smoke: true });
   if (p.kind === 'homing' && (p.lock || (p.age > 0.45 && p.vy < 40))) { const E = other(p.owner), dx = E.x - p.x, dy = E.y + 10 - p.y, d = Math.hypot(dx, dy) || 1;
     if (p.lock || d < 620) { p.lock = true; const v = clamp(Math.hypot(p.vx, p.vy) + 260*STEP, 320, 600), a0 = Math.atan2(p.vy, p.vx); let da = Math.atan2(dy, dx) - a0; while (da > Math.PI) da -= 6.283185; while (da < -Math.PI) da += 6.283185; const a1 = a0 + clamp(da, -1.9*STEP, 1.9*STEP); p.vx = Math.cos(a1)*v; p.vy = Math.sin(a1)*v + GRAV*STEP; } }          // 1.9 rad/s: it corrects a near miss, it does not chase round a hill
-  p.vx += (sn ? 0 : G.wind*WINDK)*STEP; p.vy -= GRAV*STEP; p.x += p.vx*STEP; p.y += p.vy*STEP;
+  p.vx += (f.nw ? 0 : G.wind*WINDK)*STEP; p.vy -= GRAV*(f.g || 1)*STEP; p.x += p.vx*STEP; p.y += p.vy*STEP;
   if (p.kind === 'cluster' && !p.child && p.vy < -60 && p.age > 0.3) { for (let i = 0; i < 5; i++) spawn('cluster', p.owner, p.x, p.y, 0, 0, { child: true, vx: p.vx*0.75 + (i - 2)*46 + rr(-10, 10), vy: p.vy*0.6 + rr(-20, 40), age: 0.31 }); sfx('pop'); return true; }
   if (p.n % 2 === 0 && !G.fast) { (p.trail || (p.trail = [])).push(p.x, p.y); if (p.trail.length > 110) p.trail.splice(0, 2); }
   if (p.x < -420 || p.x > W + 420 || p.y < -60) return true;
@@ -354,8 +425,8 @@ function endTurn() {
 
 // ---- the computer player --------------------------------------------------
 function landing(P, ang, pow, kind) {       // where a plain shell fired like this comes down; the ground as it stands now
-  const a = ang*Math.PI/180, sn = kind === 'sniper', v = sn ? pow*SPD*1.45 : pow*SPD*(kind === 'heavy' ? 0.86 : 1), E = other(P); let x = P.x + Math.cos(a)*30, y = P.y + 17 + Math.sin(a)*30, vx = Math.cos(a)*v, vy = Math.sin(a)*v; const dt = 1/60;
-  for (let i = 0; i < 900; i++) { vx += (sn ? 0 : G.wind*WINDK)*dt; vy -= GRAV*dt; x += vx*dt; y += vy*dt; if (x < -420 || x > W + 420 || y < -60) return null; if (i > 12 && Math.hypot(x - E.x, y - (E.y + 10)) < 21) return { x: E.x, y: y, direct: true }; if (x >= 0 && x <= W && y <= gAt(x)) return { x: x, y: y }; }
+  const a = ang*Math.PI/180, f = fly(kind), v = pow*SPD*(f.v || 1), E = other(P); let x = P.x + Math.cos(a)*30, y = P.y + 17 + Math.sin(a)*30, vx = Math.cos(a)*v, vy = Math.sin(a)*v; const dt = 1/60;
+  for (let i = 0; i < 900; i++) { if (f.thr && i*dt < f.burn) { const s = Math.hypot(vx, vy) || 1; vx += vx/s*f.thr*dt; vy += vy/s*f.thr*dt; } vx += (f.nw ? 0 : G.wind*WINDK)*dt; vy -= GRAV*(f.g || 1)*dt; x += vx*dt; y += vy*dt; if (x < -420 || x > W + 420 || y < -60) return null; if (i > 12 && Math.hypot(x - E.x, y - (E.y + 10)) < 21) return { x: E.x, y: y, direct: true }; if (x >= 0 && x <= W && y <= gAt(x)) return { x: x, y: y }; }
   return null;
 }
 function aiPlan(P) {
@@ -370,7 +441,7 @@ function aiPlan(P) {
 // ---- the showcase: in the draft the weapon under the finger fires at a target, again and again ---------------
 const DEMO = { kind: '', wait: 0, x0: 420, x1: 1380 };
 function demoSet() { const flat = false; GRASS.fill(1);
-  const A = G.players[0], B = G.players[1]; G.projs = []; G.fires = []; G.events = []; G.beams = []; FX.parts = []; FX.floats = []; FX.flashes = []; FX.trails = []; FX.scorch = []; G.wind = 0; G.t = 0;
+  const A = G.players[0], B = G.players[1]; G.projs = []; G.fires = []; G.events = []; G.beams = []; FX.parts = []; FX.floats = []; FX.flashes = []; FX.trails = []; FX.scorch = []; FX.holes = []; G.wind = 0; G.t = 0;
   for (let x = 0; x <= W; x++) ground[x] = 150 + (flat ? 3 : 16)*Math.sin(x/120) + (flat ? 0 : 22)*Math.exp(-Math.pow((x - 900)/110, 2));
   A.x = 560; B.x = 1220; for (const p of G.players) { let s = 0; for (let x = p.x - 20; x <= p.x + 20; x++) s += ground[x]; for (let x = p.x - 34; x <= p.x + 34; x++) ground[x] = s/41; p.y = ground[p.x]; p.vy = 0; p.score = 0; p.flash = 0; }
 }
@@ -423,7 +494,7 @@ function draftAuto() { if (G.phase !== 'draft') return;
   for (const i of free) { G.pool[i].by = G.dturn; G.players[G.dturn].weapons.push(G.pool[i].k); G.dturn = 1 - G.dturn; } startBattle(); }
 function startBattle(snap) {
   DEMO.kind = ''; for (const p of G.players) { p.score = 0; p.flash = 0; p.ang = p.id ? 120 : 60; p.pow = 62; p.last = null; p.shots = 0; p.hits = 0; p.best = 0; p.recoil = 0; }
-  G.theme = Math.floor(rng()*THEMES.length); G.projs = []; G.fires = []; G.events = []; G.beams = []; FX.parts = []; FX.floats = []; FX.flashes = []; FX.trails = []; FX.scorch = []; G.t = 0; G.gmax = 0; G.turn = 0; G.shot = null; if (snap) unpack(snap); else genTerrain();
+  G.theme = Math.floor(rng()*THEMES.length); G.projs = []; G.fires = []; G.events = []; G.beams = []; FX.parts = []; FX.floats = []; FX.flashes = []; FX.trails = []; FX.scorch = []; FX.holes = []; G.t = 0; G.gmax = 0; G.turn = 0; G.shot = null; if (snap) unpack(snap); else genTerrain();
   G.wind = WIND_ON ? Math.round(rr(-18, 18)) : 0; $('wind').style.display = WIND_ON ? '' : 'none'; G.phase = 'aim'; G.aiT = 0; G.stars = null; show(null); resize(); V.s = Math.min(CW/W, CH/560); V.ox = (CW - W*V.s)/2; ui(); if (!G.fast) { const t = turnTxt(); toast(t[0].toUpperCase() + t.slice(1)); }
 }
 function showOver() {
@@ -573,12 +644,17 @@ function draw(dt) {
     cx.strokeStyle = th.grassHi; cx.globalAlpha = 0.7; cx.beginPath(); for (let x = Math.max(0, x0 - x0 % 21) + 3; x <= Math.min(W, x1); x += 21) if (GRASS[x]) { const h = (6 + 6*hash2(x, 4))*k, lean = (hash2(x, 6) - 0.5)*6*k + Math.sin(now*1.6 + x*0.05)*1.4*k, X = sx(x), Y = sy(gAt(x)) - 2*k; cx.moveTo(X, Y); cx.lineTo(X + lean, Y - h); } cx.stroke(); cx.globalAlpha = 1; }
   // ---- fire
   cx.globalCompositeOperation = 'lighter'; for (const f of G.fires) { const X = sx(f.x), Y = sy(gAt(f.x)), h = (16 + 10*Math.sin(G.t*14 + f.ph))*Math.max(0.5, k)*1.5*Math.min(1, f.life); const g = cx.createRadialGradient(X, Y, 0, X, Y - h*0.4, h*1.3); g.addColorStop(0, f.acid ? 'rgba(235,255,170,.9)' : 'rgba(255,240,170,.9)'); g.addColorStop(0.45, f.acid ? 'rgba(150,230,40,.6)' : 'rgba(255,120,40,.6)'); g.addColorStop(1, f.acid ? 'rgba(60,160,20,0)' : 'rgba(255,60,20,0)'); cx.fillStyle = g; cx.beginPath(); cx.ellipse(X, Y - h*0.5, h*0.6, h*1.2, 0, 0, 6.283); cx.fill(); } cx.globalCompositeOperation = 'source-over';
+  // ---- black holes: a pit of night, a turning rim, dust pulled in
+  for (let i = FX.holes.length - 1; i >= 0; i--) { const h = FX.holes[i]; h.life -= dt; if (h.life <= 0) { FX.holes.splice(i, 1); continue; } const u = h.life/h.max, grow = Math.min(1, (1 - u)*3), R = (14 + 46*(1 - u))*k*1.2*grow + 6, X = sx(h.x), Y = sy(h.y);
+    let g = cx.createRadialGradient(X, Y, R*0.3, X, Y, R*3.4); g.addColorStop(0, 'rgba(120,50,220,.55)'); g.addColorStop(1, 'rgba(60,0,120,0)'); cx.fillStyle = g; cx.beginPath(); cx.arc(X, Y, R*3.4, 0, 6.283); cx.fill();
+    cx.fillStyle = '#04020a'; cx.beginPath(); cx.arc(X, Y, R, 0, 6.283); cx.fill(); cx.save(); cx.translate(X, Y); cx.rotate(now*5); cx.strokeStyle = '#c99bff'; cx.lineWidth = 3; cx.setLineDash([R*0.7, R*0.4]); for (const s of [1.25, 1.7]) { cx.globalAlpha = 2 - s; cx.beginPath(); cx.ellipse(0, 0, R*s, R*s*0.45, 0, 0, 6.283); cx.stroke(); cx.rotate(1.1); } cx.setLineDash([]); cx.globalAlpha = 1; cx.restore();
+    if (Math.random() < 0.8) { const ang = rnd(0, 6.283), d = rnd(120, 220); part(h.x + Math.cos(ang)*d, h.y + Math.sin(ang)*d, -Math.cos(ang)*d*2.2, -Math.sin(ang)*d*2.2, 0.42, Math.random() < 0.5 ? '#c99bff' : THEMES[G.theme].earth[0], rnd(2, 4), 0, Math.random() < 0.5); } }
   // ---- the tanks
   const tk = Math.max(k, 0.44);
   for (const p of G.players) { const X = sx(p.x), Y = sy(p.y), tilt = Math.atan2(gAt(p.x - 12) - gAt(p.x + 12), 24)*0.8, a = p.ang*Math.PI/180;
     if (G.phase === 'aim' && p === cur() && !p.ai) {
-      const kind = p.weapons[p.sel]; if (kind) { const m = muzzle(p), sn = kind === 'sniper', v = kind === 'laser' ? 900 : sn ? p.pow*SPD*1.45 : p.pow*SPD*(kind === 'heavy' ? 0.86 : 1); let px = m.x, py = m.y, vx = Math.cos(a)*v, vy = Math.sin(a)*v;
-        for (let i = 1; i <= 9; i++) { for (let j = 0; j < 4; j++) { if (kind !== 'laser') { vx += (sn ? 0 : G.wind*WINDK)/80; vy -= GRAV/80; } px += vx/80; py += vy/80; } cx.globalAlpha = 1 - i/11; const r = Math.max(2.2, 3.4*k); cx.fillStyle = 'rgba(8,11,22,.7)'; cx.beginPath(); cx.arc(sx(px), sy(py), r + 1.5, 0, 6.283); cx.fill(); cx.fillStyle = '#fff'; cx.beginPath(); cx.arc(sx(px), sy(py), r, 0, 6.283); cx.fill(); } cx.globalAlpha = 1; }
+      const kind = p.weapons[p.sel]; if (kind) { const m = muzzle(p), f = fly(kind), v = kind === 'laser' ? 900 : p.pow*SPD*(f.v || 1); let px = m.x, py = m.y, vx = Math.cos(a)*v, vy = Math.sin(a)*v;
+        for (let i = 1; i <= 9; i++) { for (let j = 0; j < 4; j++) { if (kind !== 'laser') { if (f.thr && (i*4 + j)/80 < f.burn) { const s = Math.hypot(vx, vy) || 1; vx += vx/s*f.thr/80; vy += vy/s*f.thr/80; } vx += (f.nw ? 0 : G.wind*WINDK)/80; vy -= GRAV*(f.g || 1)/80; } px += vx/80; py += vy/80; } cx.globalAlpha = 1 - i/11; const r = Math.max(2.2, 3.4*k); cx.fillStyle = 'rgba(8,11,22,.7)'; cx.beginPath(); cx.arc(sx(px), sy(py), r + 1.5, 0, 6.283); cx.fill(); cx.fillStyle = '#fff'; cx.beginPath(); cx.arc(sx(px), sy(py), r, 0, 6.283); cx.fill(); } cx.globalAlpha = 1; }
       if (p.last) { const la = p.last.ang*Math.PI/180, L = (40 + p.last.pow*1.1)*k; cx.strokeStyle = 'rgba(255,255,255,.35)'; cx.lineWidth = 2; cx.setLineDash([4, 5]); cx.beginPath(); cx.moveTo(X, Y - 18*tk); cx.lineTo(X + Math.cos(la)*L, Y - 18*tk - Math.sin(la)*L); cx.stroke(); cx.setLineDash([]); } }
     p.recoil = Math.max(0, (p.recoil || 0) - dt*4); p.jolt = Math.max(0, (p.jolt || 0) - dt*5); const jx = -Math.cos(a)*p.recoil*5*tk + (p.jolt ? Math.sin(now*70)*p.jolt*3 : 0), jy = -p.jolt*3*tk;
     drawTank(p, X + jx, Y + jy, tk, tilt, a); p.flash = Math.max(0, p.flash - dt);
@@ -587,16 +663,18 @@ function draw(dt) {
   // ---- shells
   const tail = (pts, col, alpha) => { const n = pts.length/2; if (n < 2) return; for (let pass = 0; pass < 2; pass++) for (let i = 1; i < n; i++) { const u = i/n; cx.globalAlpha = alpha*u*(pass ? 0.95 : 0.45); cx.strokeStyle = pass ? col : '#070a16'; cx.lineWidth = (pass ? 1 + 5*u : 4 + 6*u)*Math.max(0.7, k*1.5); cx.beginPath(); cx.moveTo(sx(pts[i*2 - 2]), sy(pts[i*2 - 1])); cx.lineTo(sx(pts[i*2]), sy(pts[i*2 + 1])); cx.stroke(); } cx.globalAlpha = 1; };
   for (let i = FX.trails.length - 1; i >= 0; i--) { const t = FX.trails[i]; t.life -= dt; if (t.life <= 0) { FX.trails.splice(i, 1); continue; } tail(t.pts, t.col, t.life/0.5); }
-  for (const p of G.projs) { const X = sx(p.x), Y = sy(p.y), col = pcol(p), r = (p.child ? 4.5 : p.kind === 'sniper' ? 4.5 : p.kind === 'heavy' ? 9 : 6.5)*Math.max(0.85, k*1.6);
+  for (const p of G.projs) { const X = sx(p.x), Y = sy(p.y), col = pcol(p), r = (SHELL_R[p.kind] || (p.child ? 4.5 : 6.5))*Math.max(0.85, k*1.6);
     if (p.trail) tail(p.trail, col, 1);
     if (Y < -6) { const ax = clamp(X, 14, CW - 14); cx.fillStyle = col; cx.strokeStyle = '#070a16'; cx.lineWidth = 2; cx.beginPath(); cx.moveTo(ax, 5); cx.lineTo(ax - 9, 21); cx.lineTo(ax + 9, 21); cx.closePath(); cx.fill(); cx.stroke(); continue; }
     cx.globalCompositeOperation = 'lighter'; let g = cx.createRadialGradient(X, Y, 0, X, Y, r*4.2); g.addColorStop(0, col); g.addColorStop(1, 'rgba(0,0,0,0)'); cx.globalAlpha = 0.6; cx.fillStyle = g; cx.beginPath(); cx.arc(X, Y, r*4.2, 0, 6.283); cx.fill(); cx.globalAlpha = 1; cx.globalCompositeOperation = 'source-over';
-    cx.fillStyle = '#070a16'; cx.beginPath(); cx.arc(X, Y, r + 2.2, 0, 6.283); cx.fill(); g = cx.createRadialGradient(X - r*0.3, Y - r*0.3, r*0.1, X, Y, r); g.addColorStop(0, '#ffffff'); g.addColorStop(0.45, col); g.addColorStop(1, shade(col, -0.35)); cx.fillStyle = g; cx.beginPath(); cx.arc(X, Y, r, 0, 6.283); cx.fill(); }
-  for (let i = G.beams.length - 1; i >= 0; i--) { const b = G.beams[i]; b.life -= dt; if (b.life <= 0) { G.beams.splice(i, 1); continue; } const u = b.life/0.6; cx.globalAlpha = u; cx.strokeStyle = '#070a16'; cx.lineWidth = 9 + 9*u; cx.beginPath(); cx.moveTo(sx(b.x0), sy(b.y0)); cx.lineTo(sx(b.x1), sy(b.y1)); cx.stroke(); cx.strokeStyle = b.col; cx.shadowColor = b.col; cx.shadowBlur = 22; cx.lineWidth = 4 + 8*u; cx.stroke(); cx.strokeStyle = '#fff'; cx.lineWidth = 1.5 + 3*u; cx.stroke(); cx.globalAlpha = 1; cx.shadowBlur = 0; }
+    drawShell(p, X, Y, r, col, now); }
+  for (let i = G.beams.length - 1; i >= 0; i--) { const b = G.beams[i]; b.life -= dt; if (b.life <= 0) { G.beams.splice(i, 1); continue; } const u = b.life/0.6; cx.globalAlpha = u; cx.strokeStyle = '#070a16'; cx.lineWidth = 9 + 9*u; cx.beginPath(); cx.moveTo(sx(b.x0), sy(b.y0));
+    if (b.zig) { const n = 14, L = Math.hypot(b.x1 - b.x0, b.y1 - b.y0), nx = -(b.y1 - b.y0)/L, ny = (b.x1 - b.x0)/L; for (let j = 1; j < n; j++) { const t = j/n, o = (Math.random() - 0.5)*Math.min(70, L*0.12); cx.lineTo(sx(b.x0 + (b.x1 - b.x0)*t + nx*o), sy(b.y0 + (b.y1 - b.y0)*t + ny*o)); } cx.lineWidth = 6 + 6*u; }
+    cx.lineTo(sx(b.x1), sy(b.y1)); cx.stroke(); cx.strokeStyle = b.col; cx.shadowColor = b.col; cx.shadowBlur = 22; cx.lineWidth = b.zig ? 3.5 + 5*u : 4 + 8*u; cx.stroke(); cx.strokeStyle = '#fff'; cx.lineWidth = b.zig ? 1.5 + 2*u : 1.5 + 3*u; cx.stroke(); cx.globalAlpha = 1; cx.shadowBlur = 0; }
   // ---- blasts: a white heart, a fireball, a ring of pressure; then smoke, sparks and clods
   cx.globalCompositeOperation = 'lighter';
-  for (let i = FX.flashes.length - 1; i >= 0; i--) { const f = FX.flashes[i]; f.life -= dt; if (f.life <= 0) { FX.flashes.splice(i, 1); continue; } const u = f.life/f.max, R = f.r*(1.75 - 0.75*u)*k, X = sx(f.x), Y = sy(f.y), g = cx.createRadialGradient(X, Y, 0, X, Y, R); g.addColorStop(0, 'rgba(255,255,245,' + u + ')'); g.addColorStop(0.3, 'rgba(255,224,120,' + 0.95*u + ')'); g.addColorStop(0.65, 'rgba(255,120,40,' + 0.75*u + ')'); g.addColorStop(1, 'rgba(140,30,20,0)'); cx.fillStyle = g; cx.beginPath(); cx.arc(X, Y, R, 0, 6.283); cx.fill();
-    cx.strokeStyle = 'rgba(255,240,210,' + 0.7*u + ')'; cx.lineWidth = 1 + 4*u; cx.beginPath(); cx.arc(X, Y, f.r*(2.6 - 1.5*u)*k, 0, 6.283); cx.stroke(); }
+  for (let i = FX.flashes.length - 1; i >= 0; i--) { const f = FX.flashes[i]; f.life -= dt; if (f.life <= 0) { FX.flashes.splice(i, 1); continue; } const u = f.life/f.max, R = f.r*(1.75 - 0.75*u)*k, X = sx(f.x), Y = sy(f.y), g = cx.createRadialGradient(X, Y, 0, X, Y, R); const C = f.pal || PAL.fire, rgba = (c, al) => 'rgba(' + c[0] + ',' + c[1] + ',' + c[2] + ',' + al + ')'; g.addColorStop(0, rgba(C[0], u)); g.addColorStop(0.3, rgba(C[1], 0.95*u)); g.addColorStop(0.65, rgba(C[2], 0.75*u)); g.addColorStop(1, rgba(C[3], 0)); cx.fillStyle = g; cx.beginPath(); cx.arc(X, Y, R, 0, 6.283); cx.fill();
+    cx.strokeStyle = rgba(C[1], 0.7*u); cx.lineWidth = 1 + 4*u; cx.beginPath(); cx.arc(X, Y, f.r*(2.6 - 1.5*u)*k, 0, 6.283); cx.stroke(); }
   cx.globalCompositeOperation = 'source-over';
   for (let i = FX.parts.length - 1; i >= 0; i--) { const p = FX.parts[i]; p.life -= dt; if (p.life <= 0) { FX.parts.splice(i, 1); continue; } p.vy -= GRAV*p.g*dt; p.x += p.vx*dt; p.y += p.vy*dt; const u = p.life/p.max, X = sx(p.x), Y = sy(p.y);
     if (p.smoke) { p.vx *= 1 - 1.5*dt; const r = p.size*(1 + (1 - u)*2.2)*Math.max(0.6, k*1.4), g = cx.createRadialGradient(X, Y, 0, X, Y, r); g.addColorStop(0, 'rgba(' + p.col + ',' + 0.42*u + ')'); g.addColorStop(1, 'rgba(' + p.col + ',0)'); cx.fillStyle = g; cx.beginPath(); cx.arc(X, Y, r, 0, 6.283); cx.fill(); continue; }
@@ -605,8 +683,62 @@ function draw(dt) {
   cx.font = '900 ' + Math.round(clamp(34*k*1.5, 18, 34)) + 'px -apple-system, Roboto, "Segoe UI", sans-serif'; cx.textAlign = 'center'; cx.lineJoin = 'round';
   for (let i = FX.floats.length - 1; i >= 0; i--) { const f = FX.floats[i]; f.life -= dt; if (f.life <= 0) { FX.floats.splice(i, 1); continue; } f.y += 46*dt; cx.globalAlpha = Math.min(1, f.life*2); cx.lineWidth = 5; cx.strokeStyle = 'rgba(8,11,22,.9)'; cx.strokeText(f.txt, sx(f.x), sy(f.y)); cx.fillStyle = f.col; cx.fillText(f.txt, sx(f.x), sy(f.y)); } cx.globalAlpha = 1;
   cx.restore();
-  if (FX.white > 0 && !G.demo) { cx.fillStyle = 'rgba(255,245,225,' + Math.min(0.5, FX.white) + ')'; cx.fillRect(0, 0, CW, CH); FX.white -= dt*2.4; }
+  if (FX.white > 0 && !G.demo) { cx.fillStyle = 'rgba(255,245,225,' + Math.min(0.8, FX.white) + ')'; cx.fillRect(0, 0, CW, CH); FX.white -= dt*2.4; }
   { const g = cx.createRadialGradient(CW/2, CH/2, Math.min(CW, CH)*0.45, CW/2, CH/2, Math.max(CW, CH)*0.75); g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(1, 'rgba(0,0,10,.34)'); cx.fillStyle = g; cx.fillRect(0, 0, CW, CH); }
+}
+// ---- what each shell looks like in flight ----------------------------------
+const SHELL_R = { sniper: 4.5, heavy: 9, nuke: 11, metr: 7, spike: 4, crawler: 6.5, airbomb: 5.5, fountc: 4.2, plasma: 7.5 };
+function drawShell(p, X, Y, r, col, now) {
+  const k = p.kind, ink = '#070a16', a = Math.atan2(-p.vy, p.vx), dk = shade(col, -0.45), lt = shade(col, 0.55);
+  const ball = (R, c0, c1) => { cx.fillStyle = ink; cx.beginPath(); cx.arc(0, 0, R + 2, 0, 6.283); cx.fill(); const g = cx.createRadialGradient(-R*0.3, -R*0.3, R*0.1, 0, 0, R); g.addColorStop(0, '#fff'); g.addColorStop(0.45, c0); g.addColorStop(1, c1); cx.fillStyle = g; cx.beginPath(); cx.arc(0, 0, R, 0, 6.283); cx.fill(); };
+  const glow = (R, c, al) => { cx.globalCompositeOperation = 'lighter'; const g = cx.createRadialGradient(0, 0, 0, 0, 0, R); g.addColorStop(0, c); g.addColorStop(1, 'rgba(0,0,0,0)'); cx.globalAlpha = al; cx.fillStyle = g; cx.beginPath(); cx.arc(0, 0, R, 0, 6.283); cx.fill(); cx.globalAlpha = 1; cx.globalCompositeOperation = 'source-over'; };
+  const metal = (y0, y1, c) => { const g = cx.createLinearGradient(0, y0, 0, y1); g.addColorStop(0, shade(c, 0.6)); g.addColorStop(0.45, c); g.addColorStop(1, shade(c, -0.5)); return g; };
+  cx.save(); cx.translate(X, Y); cx.lineJoin = 'round'; cx.lineCap = 'round'; cx.strokeStyle = ink; cx.lineWidth = 2;
+  if (k === 'he' || k === 'triple' || k === 'shot') {          // a pointed shell
+    cx.rotate(a); const L = r*1.55, D = r*0.82; cx.beginPath(); cx.moveTo(-L, -D); cx.lineTo(L*0.3, -D); cx.quadraticCurveTo(L*1.35, 0, L*0.3, D); cx.lineTo(-L, D); cx.closePath(); cx.fillStyle = metal(-D, D, col); cx.fill(); cx.stroke();
+    cx.fillStyle = 'rgba(7,10,22,.45)'; cx.fillRect(-L*0.55, -D, L*0.28, D*2);
+  } else if (k === 'cluster') {                                  // a capsule full of bomblets
+    cx.rotate(a); const L = r*1.6, D = r; rrect(-L, -D, L*2, D*2, D); cx.fillStyle = metal(-D, D, col); cx.fill(); cx.stroke(); cx.fillStyle = ink; for (const x of [-0.5, 0, 0.5]) { cx.beginPath(); cx.arc(x*L, 0, D*0.32, 0, 6.283); cx.fill(); }
+  } else if (k === 'rocket' || k === 'homing') {                // a missile with fins; a flame while the engine works
+    cx.rotate(a); const L = r*1.9, D = r*0.62, burn = k === 'rocket' ? p.age < 0.7 : !!p.lock;
+    if (burn) { const fl = L*(0.9 + Math.random()*0.7); cx.globalCompositeOperation = 'lighter'; const g = cx.createLinearGradient(-L, 0, -L - fl, 0); g.addColorStop(0, 'rgba(255,255,220,1)'); g.addColorStop(0.4, 'rgba(255,170,60,.9)'); g.addColorStop(1, 'rgba(255,60,20,0)'); cx.fillStyle = g; cx.beginPath(); cx.moveTo(-L, -D*0.8); cx.lineTo(-L - fl, 0); cx.lineTo(-L, D*0.8); cx.fill(); cx.globalCompositeOperation = 'source-over'; }
+    cx.fillStyle = col; cx.beginPath(); cx.moveTo(-L*0.55, -D); cx.lineTo(-L*1.05, -D*2.1); cx.lineTo(-L, -D); cx.moveTo(-L*0.55, D); cx.lineTo(-L*1.05, D*2.1); cx.lineTo(-L, D); cx.fill(); cx.stroke();
+    cx.beginPath(); cx.moveTo(-L, -D); cx.lineTo(L*0.45, -D); cx.quadraticCurveTo(L*1.15, 0, L*0.45, D); cx.lineTo(-L, D); cx.closePath(); cx.fillStyle = metal(-D, D, '#dfe6f5'); cx.fill(); cx.stroke();
+    cx.fillStyle = col; cx.beginPath(); cx.moveTo(L*0.42, -D); cx.quadraticCurveTo(L*1.15, 0, L*0.42, D); cx.closePath(); cx.fill();
+  } else if (k === 'sniper' || k === 'spike') {                 // a streak of light
+    cx.rotate(a); const L = r*(k === 'spike' ? 3 : 5.5), g = cx.createLinearGradient(-L, 0, r, 0); g.addColorStop(0, 'rgba(255,255,255,0)'); g.addColorStop(1, '#fff'); cx.strokeStyle = col; cx.lineWidth = r*1.3; cx.globalAlpha = 0.55; cx.beginPath(); cx.moveTo(-L, 0); cx.lineTo(r, 0); cx.stroke(); cx.globalAlpha = 1; cx.strokeStyle = g; cx.lineWidth = r*0.6; cx.beginPath(); cx.moveTo(-L, 0); cx.lineTo(r*1.2, 0); cx.stroke();
+  } else if (k === 'heavy') {                                    // an iron ball with a burning fuse
+    ball(r, '#6a7288', '#1a1e2c'); cx.strokeStyle = col; cx.lineWidth = r*0.35; cx.beginPath(); cx.arc(0, 0, r*0.78, 0.3, 2.8); cx.stroke(); cx.strokeStyle = '#c8b48a'; cx.lineWidth = 2; cx.beginPath(); cx.moveTo(0, -r); cx.quadraticCurveTo(r*0.4, -r*1.5, r*0.2, -r*1.8); cx.stroke();
+    for (let i = 0; i < 3; i++) { cx.fillStyle = i ? '#ffd36a' : '#fff'; cx.beginPath(); cx.arc(r*0.2 + (Math.random() - 0.5)*r*0.8, -r*1.8 + (Math.random() - 0.5)*r*0.8, 1.5 + Math.random()*1.5, 0, 6.283); cx.fill(); }
+  } else if (k === 'nuke') {                                     // yellow, with the three black blades, turning
+    glow(r*3, 'rgba(255,240,120,.8)', 0.5); ball(r, col, '#c8a800'); cx.rotate(p.age*3); cx.fillStyle = ink; for (let i = 0; i < 3; i++) { cx.beginPath(); cx.moveTo(0, 0); cx.arc(0, 0, r*0.82, i*2.094 - 0.5, i*2.094 + 0.5); cx.closePath(); cx.fill(); } cx.fillStyle = col; cx.beginPath(); cx.arc(0, 0, r*0.22, 0, 6.283); cx.fill();
+  } else if (k === 'drill') {                                    // a cone with a turning thread
+    cx.rotate(a); const L = r*1.7, D = r; cx.beginPath(); cx.moveTo(L, 0); cx.lineTo(-L*0.6, -D); cx.lineTo(-L*0.6, D); cx.closePath(); cx.fillStyle = metal(-D, D, col); cx.fill(); cx.stroke(); cx.save(); cx.clip(); cx.strokeStyle = 'rgba(7,10,22,.55)'; cx.lineWidth = 1.6; const o = (p.age*60) % 6; for (let x = -L; x < L; x += 6) { cx.beginPath(); cx.moveTo(x + o, -D); cx.lineTo(x + o + 3, D); cx.stroke(); } cx.restore(); cx.fillStyle = '#3a4466'; cx.fillRect(-L*0.9, -D*0.7, L*0.32, D*1.4);
+  } else if (k === 'bounce') {                                   // a rubber ball with a spinning stripe
+    ball(r, col, dk); cx.rotate(p.age*14); cx.strokeStyle = 'rgba(255,255,255,.85)'; cx.lineWidth = r*0.35; cx.beginPath(); cx.arc(0, 0, r*0.62, -0.9, 0.9); cx.stroke();
+  } else if (k === 'napalm' || k === 'acid') {                   // a drop of burning or eating liquid
+    glow(r*3.2, col, 0.55); cx.rotate(a); cx.beginPath(); cx.moveTo(-r*2.4, 0); cx.quadraticCurveTo(-r*0.6, -r*1.05, r*0.15, -r); cx.arc(0, 0, r, -1.45, 1.45); cx.quadraticCurveTo(-r*0.6, r*1.05, -r*2.4, 0); cx.closePath(); const g = cx.createRadialGradient(r*0.2, -r*0.3, 1, 0, 0, r*1.6); g.addColorStop(0, '#fff'); g.addColorStop(0.35, lt); g.addColorStop(1, dk); cx.fillStyle = g; cx.fill(); cx.stroke();
+  } else if (k === 'plasma' || k === 'lightning') {             // a ball of charge with sparks running over it
+    const pul = 1 + 0.15*Math.sin(now*22 + p.n); glow(r*4.2*pul, col, 0.8); cx.globalCompositeOperation = 'lighter'; const g = cx.createRadialGradient(0, 0, 0, 0, 0, r*1.25*pul); g.addColorStop(0, '#fff'); g.addColorStop(0.5, col); g.addColorStop(1, 'rgba(40,80,255,0)'); cx.fillStyle = g; cx.beginPath(); cx.arc(0, 0, r*1.25*pul, 0, 6.283); cx.fill();
+    cx.strokeStyle = '#ffffff'; cx.lineWidth = 1.3; for (let i = 0; i < (k === 'lightning' ? 4 : 3); i++) { let ang = Math.random()*6.283, rr0 = r*0.4; cx.beginPath(); cx.moveTo(Math.cos(ang)*rr0, Math.sin(ang)*rr0); for (let j = 0; j < 3; j++) { ang += (Math.random() - 0.5)*0.9; rr0 += r*0.6; cx.lineTo(Math.cos(ang)*rr0, Math.sin(ang)*rr0); } cx.stroke(); } cx.globalCompositeOperation = 'source-over';
+  } else if (k === 'hole') {                                     // a speck of night with a ring turning round it
+    glow(r*3.6, 'rgba(170,100,255,1)', 0.45); cx.fillStyle = '#05030c'; cx.beginPath(); cx.arc(0, 0, r*1.1, 0, 6.283); cx.fill(); cx.rotate(now*6); cx.strokeStyle = col; cx.lineWidth = 2.2; cx.setLineDash([r*0.9, r*0.6]); cx.beginPath(); cx.ellipse(0, 0, r*1.9, r*0.8, 0, 0, 6.283); cx.stroke(); cx.setLineDash([]);
+  } else if (k === 'tele') {                                     // a ring of light
+    glow(r*3, col, 0.6); cx.rotate(p.age*9); cx.strokeStyle = col; cx.lineWidth = r*0.45; cx.setLineDash([r*0.8, r*0.5]); cx.beginPath(); cx.arc(0, 0, r, 0, 6.283); cx.stroke(); cx.setLineDash([]); cx.fillStyle = '#fff'; cx.beginPath(); cx.arc(0, 0, r*0.35, 0, 6.283); cx.fill();
+  } else if (k === 'metr' || k === 'meteor') {                  // a burning stone
+    cx.save(); cx.rotate(a + Math.PI); cx.globalCompositeOperation = 'lighter'; const fl = r*(3.5 + Math.random()*1.5), g = cx.createLinearGradient(0, 0, fl, 0); g.addColorStop(0, 'rgba(255,230,150,.95)'); g.addColorStop(0.5, 'rgba(255,120,30,.6)'); g.addColorStop(1, 'rgba(255,40,10,0)'); cx.fillStyle = g; cx.beginPath(); cx.moveTo(0, -r*1.1); cx.lineTo(fl, 0); cx.lineTo(0, r*1.1); cx.fill(); cx.globalCompositeOperation = 'source-over'; cx.restore();
+    cx.rotate(p.age*4); cx.beginPath(); for (let i = 0; i < 7; i++) { const ang = i/7*6.283, R = r*(0.78 + 0.32*hash2(i, Math.round(p.x0 || 3))); cx[i ? 'lineTo' : 'moveTo'](Math.cos(ang)*R, Math.sin(ang)*R); } cx.closePath(); cx.fillStyle = '#5b3a28'; cx.fill(); cx.strokeStyle = '#ffb24a'; cx.lineWidth = 2; cx.stroke();
+  } else if (k === 'crawler') {                                  // a beetle: legs going while it crawls
+    const going = !!p.crawl; if (going) cx.scale(p.dir, 1); else cx.rotate(a); cx.strokeStyle = ink; cx.lineWidth = 1.8; for (let i = 0; i < 3; i++) { const w = going ? Math.sin(now*30 + i*2)*r*0.4 : 0; cx.beginPath(); cx.moveTo((i - 1)*r*0.6, 0); cx.lineTo((i - 1)*r*0.6 + w, r*1.25); cx.moveTo((i - 1)*r*0.6, 0); cx.lineTo((i - 1)*r*0.6 - w, -r*1.25); cx.stroke(); }
+    cx.beginPath(); cx.ellipse(0, 0, r*1.15, r*0.8, 0, 0, 6.283); cx.fillStyle = metal(-r, r, col); cx.fill(); cx.stroke(); cx.beginPath(); cx.arc(r*1.15, 0, r*0.45, 0, 6.283); cx.fillStyle = dk; cx.fill(); cx.stroke(); cx.strokeStyle = 'rgba(7,10,22,.5)'; cx.lineWidth = 1.2; cx.beginPath(); cx.moveTo(-r*1.1, 0); cx.lineTo(r*0.9, 0); cx.stroke();
+  } else if (k === 'roll') {                                     // a wheel with spokes
+    ball(r*1.1, col, dk); cx.rotate(-(p.x || 0)*0.09); cx.strokeStyle = ink; cx.lineWidth = 1.6; for (let i = 0; i < 3; i++) { cx.beginPath(); cx.moveTo(Math.cos(i*1.047)*r, Math.sin(i*1.047)*r); cx.lineTo(-Math.cos(i*1.047)*r, -Math.sin(i*1.047)*r); cx.stroke(); }
+  } else if (k === 'dirt' || k === 'pit') {                     // a clod of earth
+    ball(r*1.1, col, shade(col, -0.6)); cx.fillStyle = 'rgba(40,24,10,.6)'; for (let i = 0; i < 4; i++) { cx.beginPath(); cx.arc(Math.cos(i*1.7)*r*0.5, Math.sin(i*2.3)*r*0.5, r*0.18, 0, 6.283); cx.fill(); }
+  } else if (k === 'air') {                                      // a signal flare, blinking
+    ball(r, col, dk); if (Math.sin(now*24) > 0) glow(r*4, 'rgba(255,90,60,1)', 0.9);
+  } else ball(r, col, dk);
+  cx.restore();
 }
 function rrect(x, y, w, h, r) { cx.beginPath(); cx.moveTo(x + r, y); cx.arcTo(x + w, y, x + w, y + h, r); cx.arcTo(x + w, y + h, x, y + h, r); cx.arcTo(x, y + h, x, y, r); cx.arcTo(x, y, x + w, y, r); cx.closePath(); }
 
@@ -626,6 +758,11 @@ function sfx(kind, size) {
   else if (kind === 'fire') noise(1.4, 1400, 300, 0.25);
   else if (kind === 'flare') tone('sine', 500, 1400, 0.5, 0.15);
   else if (kind === 'drill') tone('sawtooth', 90, 60, 0.8, 0.25);
+  else if (kind === 'zap') { noise(0.35, 8000, 1800, 0.5); tone('sawtooth', 2400, 300, 0.25, 0.22); }
+  else if (kind === 'rumble') { noise(1.4, 420, 60, 0.6); tone('sine', 46, 30, 1.3, 0.6); }
+  else if (kind === 'nuke') { noise(2.4, 2600, 40, 0.9); tone('sine', 80, 22, 2.2, 1); }
+  else if (kind === 'whoosh') noise(0.7, 3200, 600, 0.25);
+  else if (kind === 'hole') { tone('sine', 320, 40, 1.7, 0.35); tone('sawtooth', 120, 30, 1.7, 0.07); }
   else if (kind === 'win') { tone('triangle', 523, 523, 0.14, 0.25); tone('triangle', 659, 659, 0.14, 0.25, 0.14); tone('triangle', 784, 784, 0.3, 0.25, 0.28); }
   else if (kind === 'lose') { tone('triangle', 392, 370, 0.2, 0.25); tone('triangle', 330, 300, 0.4, 0.25, 0.2); }
 }
